@@ -1,0 +1,189 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\entity\BaseEntity.cc" />
+    <ClCompile Include="..\src\entity\EntityDraw.cc" />
+    <ClCompile Include="..\src\main.cc" />
+    <ClCompile Include="..\src\pch\precompile.cc">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="..\src\plankton\PlanktonGame.cc" />
+    <ClCompile Include="..\src\plankton\PlanktonMain.cc" />
+    <ClCompile Include="..\src\plankton\PlanktonTweakerContext.cc" />
+    <ClCompile Include="..\src\plankton\scene\SpiritFloatingScene.cc" />
+    <ClCompile Include="..\src\util\config\ini.c">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">_CRT_SECURE_NO_WARNINGS;WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+      </ForcedIncludeFiles>
+      <ForcedIncludeFiles Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+      </ForcedIncludeFiles>
+    </ClCompile>
+    <ClCompile Include="..\src\util\config\reader\GLINIReader.cpp" />
+    <ClCompile Include="..\src\util\config\reader\INIReader.cpp" />
+    <ClCompile Include="..\src\util\logging\emitter\DebuggerConsoleLogEmitter.cc" />
+    <ClCompile Include="..\src\util\logging\emitter\FileLogEmitter.cc" />
+    <ClCompile Include="..\src\util\logging\emitter\LogEmitter.cc" />
+    <ClCompile Include="..\src\util\logging\emitter\MessageBoxLogEmitter.cc" />
+    <ClCompile Include="..\src\util\logging\emitter\PipeLogEmitter.cc" />
+    <ClCompile Include="..\src\util\logging\Logger.cc" />
+    <ClCompile Include="..\src\util\measurement\FPSCounter.cc" />
+    <ClCompile Include="..\src\util\wrapper\atb_wrap.cc" />
+    <ClCompile Include="..\src\util\wrapper\sdl_wrap.cc" />
+    <ClCompile Include="..\src\util\wrapper\TwEventSDL20.c">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\entity\BaseEntity.h" />
+    <ClInclude Include="..\src\entity\EntityDraw.h" />
+    <ClInclude Include="..\src\pch\precompile.h" />
+    <ClInclude Include="..\src\plankton\PlanktonGame.h" />
+    <ClInclude Include="..\src\plankton\PlanktonMain.h" />
+    <ClInclude Include="..\src\plankton\PlanktonTweakerContext.h" />
+    <ClInclude Include="..\src\plankton\scene\SpiritFloatingScene.h" />
+    <ClInclude Include="..\src\util\config\ini.h" />
+    <ClInclude Include="..\src\util\config\reader\GLINIReader.h" />
+    <ClInclude Include="..\src\util\config\reader\INIReader.h" />
+    <ClInclude Include="..\src\util\def\ColorDef.h" />
+    <ClInclude Include="..\src\util\logging\emitter\DebuggerConsoleLogEmitter.h" />
+    <ClInclude Include="..\src\util\logging\emitter\FileLogEmitter.h" />
+    <ClInclude Include="..\src\util\logging\emitter\LogEmitter.h" />
+    <ClInclude Include="..\src\util\logging\emitter\MessageBoxLogEmitter.h" />
+    <ClInclude Include="..\src\util\logging\emitter\PipeLogEmitter.h" />
+    <ClInclude Include="..\src\util\logging\Logger.h" />
+    <ClInclude Include="..\src\util\macro_util.h" />
+    <ClInclude Include="..\src\util\math_aux.h" />
+    <ClInclude Include="..\src\util\measurement\FPSCounter.h" />
+    <ClInclude Include="..\src\util\wrapper\atb_wrap.h" />
+    <ClInclude Include="..\src\util\wrapper\crtdbg_wrap.h" />
+    <ClInclude Include="..\src\util\wrapper\glgraphics_wrap.h" />
+    <ClInclude Include="..\src\util\wrapper\glm_wrap.h" />
+    <ClInclude Include="..\src\util\wrapper\sdl_wrap.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{1AA04D48-AD99-4B2A-8058-B840FC91770A}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Plankton</RootNamespace>
+    <ProjectName>Plankton</ProjectName>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)..\bin\$(Platform)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+    <IncludePath>$(SolutionDir)..\src;$(IncludePath)</IncludePath>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)..\bin\$(Platform)\</OutDir>
+    <IntDir>$(Platform)\$(Configuration)\</IntDir>
+    <TargetName>$(ProjectName)_$(Platform)_$(Configuration)</TargetName>
+    <IncludePath>$(SolutionDir)..\src;$(IncludePath)</IncludePath>
+    <RunCodeAnalysis>false</RunCodeAnalysis>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <ForcedIncludeFiles>pch/precompile.h</ForcedIncludeFiles>
+      <PrecompiledHeaderFile>pch/precompile.h</PrecompiledHeaderFile>
+      <ExceptionHandling>false</ExceptionHandling>
+      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <DisableSpecificWarnings>4127;4530</DisableSpecificWarnings>
+      <AdditionalOptions>/Zm360 %(AdditionalOptions)</AdditionalOptions>
+      <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <AdditionalIncludeDirectories>C:\Work\Lib\SDL\SDL2-2.0.3\include;C:\Work\Lib\SDL_image\SDL2_image-2.0.0\include;C:\Work\Lib\SDL_ttf\SDL2_ttf-2.0.12\include;C:\Work\Lib\glew\glew-1.9.0\include;C:\Work\Lib\boost\boost_1_55_0\include;C:\Work\Lib\freeglut\freeglut-2.8.1\include;C:\Work\Lib\glm\glm-0.9.5.2\include;C:\Work\Lib\AntTweakBar\AntTweakBar-1.16\include</AdditionalIncludeDirectories>
+      <EnablePREfast>false</EnablePREfast>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;glew32.lib;freeglut.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Work\Lib\SDL\SDL2-2.0.3\lib\x86;C:\Work\Lib\SDL_image\SDL2_image-2.0.0\lib\x86;C:\Work\Lib\SDL_ttf\SDL2_ttf-2.0.12\lib\x86;C:\Work\Lib\glew\glew-1.9.0\lib;C:\Work\Lib\freeglut\freeglut-2.8.1\lib\x86;C:\Work\Lib\AntTweakBar\AntTweakBar-1.16\lib</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>(if not exist $(OutputPath) mkdir $(OutputPath)) &amp; copy /Y C:\Work\Lib\SPARK\SPARK-2-r377\lib\dynamic\SPARK_debug.dll $(OutputPath)\SPARK_debug.dll &amp; copy /Y C:\Work\Lib\SPARK\SPARK-2-r377\lib\dynamic\SPARK_GL_debug.dll $(OutputPath)\SPARK_GL_debug.dll &amp; copy /Y C:\Work\Lib\freeglut\freeglut-2.8.1\lib\x86\Debug\freeglut.dll $(OutputPath)\freeglut.dll &amp; copy /Y C:\Work\Lib\glew\glew-1.9.0\bin\glew32d.dll $(OutputPath)\glew32d.dll &amp; copy /Y C:\Work\Lib\AntTweakBar\AntTweakBar-1.16\lib\AntTweakBar.dll $(OutputPath)\AntTweakBar.dll</Command>
+      <Message>Copy the needed dll files</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level4</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <ForcedIncludeFiles>pch/precompile.h</ForcedIncludeFiles>
+      <PrecompiledHeaderFile>pch/precompile.h</PrecompiledHeaderFile>
+      <ExceptionHandling>false</ExceptionHandling>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
+      <DisableSpecificWarnings>4127;4530</DisableSpecificWarnings>
+      <AdditionalOptions>/Zm360 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalIncludeDirectories>C:\Work\Lib\SDL\SDL2-2.0.3\include;C:\Work\Lib\SDL_image\SDL2_image-2.0.0\include;C:\Work\Lib\SDL_ttf\SDL2_ttf-2.0.12\include;C:\Work\Lib\glew\glew-1.9.0\include;C:\Work\Lib\boost\boost_1_55_0\include;C:\Work\Lib\freeglut\freeglut-2.8.1\include;C:\Work\Lib\glm\glm-0.9.5.2\include;C:\Work\Lib\AntTweakBar\AntTweakBar-1.16\include</AdditionalIncludeDirectories>
+      <EnablePREfast>false</EnablePREfast>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <TreatLinkerWarningAsErrors>true</TreatLinkerWarningAsErrors>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;SDL2_ttf.lib;glew32.lib;freeglut.lib;opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>C:\Work\Lib\SDL\SDL2-2.0.3\lib\x86;C:\Work\Lib\SDL_image\SDL2_image-2.0.0\lib\x86;C:\Work\Lib\SDL_ttf\SDL2_ttf-2.0.12\lib\x86;C:\Work\Lib\glew\glew-1.9.0\lib;C:\Work\Lib\freeglut\freeglut-2.8.1\lib\x86;C:\Work\Lib\AntTweakBar\AntTweakBar-1.16\lib</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>(if not exist $(OutputPath) mkdir $(OutputPath)) &amp; copy /Y C:\Work\Lib\SPARK\SPARK-2-r377\lib\dynamic\SPARK.dll $(OutputPath)\SPARK.dll &amp; copy /Y C:\Work\Lib\SPARK\SPARK-2-r377\lib\dynamic\SPARK_GL.dll $(OutputPath)\SPARK_GL.dll &amp; copy /Y C:\Work\Lib\freeglut\freeglut-2.8.1\lib\x86\freeglut.dll $(OutputPath)\freeglut.dll &amp; copy /Y C:\Work\Lib\glew\glew-1.9.0\bin\glew32.dll $(OutputPath)\glew32.dll &amp; copy /Y C:\Work\Lib\AntTweakBar\AntTweakBar-1.16\lib\AntTweakBar.dll $(OutputPath)\AntTweakBar.dll</Command>
+      <Message>Copy the needed dll files</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
