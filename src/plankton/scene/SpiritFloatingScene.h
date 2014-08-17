@@ -9,7 +9,7 @@
 
 class Spirit : public BaseEntity {
  public:
-  Spirit() : BaseEntity(), quadric_(nullptr) {}
+  Spirit() : BaseEntity(), quadric_(nullptr), speed_(50.0f), goal_() {}
   ~Spirit() {}
 
   virtual int Initialize();
@@ -19,6 +19,8 @@ class Spirit : public BaseEntity {
 
  private:
   GLUquadric *quadric_;
+  float speed_;
+  glm::vec3 goal_;
 };
 
 class SpiritFloatingScene : public PlanktonGameSceneInterface {

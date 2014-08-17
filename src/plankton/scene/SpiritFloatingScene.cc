@@ -2,8 +2,11 @@
  * Copyright (C) 2014 The Motel On Jupiter
  */
 #include "plankton/scene/SpiritFloatingScene.h"
+#include <algorithm>
 #include "util/logging/Logger.h"
+#include "util/wrapper/glgraphics_wrap.h"
 #include "util/macro_util.h"
+#include "util/math_aux.h"
 
 int Spirit::Initialize() {
   set_pos(glm::vec3(0.0f, 5.0f, 0.0f));
@@ -22,7 +25,11 @@ void Spirit::Finalize() {
 }
 
 void Spirit::Update(float elapsed_time) {
-  set_pos(glm::rotateZ(pos(), glm::radians(30.0f * elapsed_time)));
+  if (is_fzero(glm::distance(pos(), goal_))) {
+    goal_ = glm::linearRand(glm::vec3(-10.0f), glm::vec3(10.0f));
+  }
+  float dist = std::min<float>(glm::distance(pos(), goal_), speed_ * elapsed_time);
+  set_pos(pos() + glm::normalize(goal_ - pos()) * dist);
 }
 
 void Spirit::Draw() {
