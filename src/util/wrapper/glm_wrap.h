@@ -18,5 +18,9 @@
 
 #include <glm/gtx/compatibility.hpp>
 #include <glm/gtx/rotate_vector.hpp>
+#pragma warning(push)
+#pragma warning(disable:4189)
+#include <glm/gtx/spline.hpp>
+#pragma warning(pop)
 
 #endif /* GLM_WRAP_H_ */
