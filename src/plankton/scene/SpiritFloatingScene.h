@@ -18,6 +18,11 @@ class Spirit : public BaseEntity {
   virtual void Draw();
 
  private:
+  static const GLfloat kAmbientColor[];
+  static const GLfloat kDiffuseColor[];
+  static const GLfloat kSpecularColor[];
+  static const GLfloat kShininess;
+
   GLUquadric *quadric_;
   float speed_;
   glm::vec3 goal_;
@@ -28,13 +33,22 @@ class SpiritFloatingScene : public PlanktonGameSceneInterface {
   SpiritFloatingScene();
   virtual ~SpiritFloatingScene() {}
 
-  virtual int Initialize();
+  virtual int Initialize(const glm::vec2 &window_size);
   virtual void Finalize();
-  virtual void Update(float elapsed_time);
-  virtual void Draw();
+  virtual void Update(float elapsed_time, const glm::vec2 &window_size);
+  virtual void Draw(const glm::vec2 &window_size);
   virtual int OnMouseButtonDown(unsigned char button, const glm::vec2 &cursor_pos);
 
  private:
+  static const float kPerspectiveFovy;
+  static const float kPerspectiveNear;
+  static const float kPerspectiveFar;
+  static const GLfloat kLightPosition[];
+  static const GLfloat kLightAmbientColor[];
+  static const GLfloat kLightDiffuseColor[];
+  static const GLfloat kLightSpecularColor[];
+  static const glm::mat4 kViewMatrix;
+
   bool initialize_;
   Spirit spirit_;
 };

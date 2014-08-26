@@ -5,6 +5,7 @@
 #ifndef MALLGAME_H_
 #define MALLGAME_H_
 
+#include <vector>
 #include <SDL_ttf.h>
 
 class PlanktonGameSceneInterface {
@@ -12,10 +13,10 @@ class PlanktonGameSceneInterface {
   PlanktonGameSceneInterface() {}
   virtual ~PlanktonGameSceneInterface() {}
 
-  virtual int Initialize() = 0;
+  virtual int Initialize(const glm::vec2 &window_size) = 0;
   virtual void Finalize() = 0;
-  virtual void Update(float elapsed_time) = 0;
-  virtual void Draw() = 0;
+  virtual void Update(float elapsed_time, const glm::vec2 &window_size) = 0;
+  virtual void Draw(const glm::vec2 &window_size) = 0;
   virtual int OnMouseButtonDown(unsigned char button, const glm::vec2 &cursor_pos) = 0;
 };
 
@@ -24,15 +25,16 @@ class PlanktonGame {
   PlanktonGame();
   ~PlanktonGame();
 
-  int Initialize(const glm::vec2 &window_size);
+  int Initialize();
   void Finalize();
-  void Update(float elapsed_time);
+  void Update(float elapsed_time, const glm::vec2 &window_size);
   void Draw(const glm::vec2 &window_size);
-  int OnKeyboardDown(SDL_Keycode key);
+  int OnKeyboardDown(SDL_Keycode key, const glm::vec2 &window_size);
   int OnMouseButtonDown(unsigned char button, int x, int y, const glm::vec2 &window_size);
 
  private:
-  PlanktonGameSceneInterface *scene_;
+  std::vector<PlanktonGameSceneInterface *> scenes_;
+  PlanktonGameSceneInterface *active_scene_;
   TTF_Font *font_;
 };
 

@@ -1,12 +1,17 @@
 /**
  * Copyright (C) 2014 The Motel On Jupiter
  */
-#include "plankton/scene/SpiritFloatingScene.h"
+#include "SpiritFloatingScene.h"
 #include <algorithm>
 #include "util/logging/Logger.h"
 #include "util/wrapper/glgraphics_wrap.h"
 #include "util/macro_util.h"
 #include "util/math_aux.h"
+
+const GLfloat Spirit::kAmbientColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
+const GLfloat Spirit::kDiffuseColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
+const GLfloat Spirit::kSpecularColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+const GLfloat Spirit::kShininess = 1.0f;
 
 int Spirit::Initialize() {
   set_pos(glm::vec3(0.0f, 5.0f, 0.0f));
@@ -28,20 +33,38 @@ void Spirit::Update(float elapsed_time) {
   if (is_fzero(glm::distance(pos(), goal_))) {
     goal_ = glm::linearRand(glm::vec3(-10.0f), glm::vec3(10.0f));
   }
-  float dist = std::min<float>(glm::distance(pos(), goal_), speed_ * elapsed_time);
+  float dist = std::min(glm::distance(pos(), goal_), speed_ * elapsed_time);
   set_pos(pos() + glm::normalize(goal_ - pos()) * dist);
 }
 
 void Spirit::Draw() {
+  glMaterialfv(GL_FRONT, GL_AMBIENT, kAmbientColor);
+  glMaterialfv(GL_FRONT, GL_DIFFUSE, kDiffuseColor);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, kSpecularColor);
+  glMaterialfv(GL_FRONT, GL_SHININESS, &kShininess);
+
   glMultMatrixf(glm::value_ptr(glm::translate(pos())));
   gluSphere(quadric_, 1.0, 30, 30);
 }
+
+const float SpiritFloatingScene::kPerspectiveFovy = glm::radians(45.0f);
+const float SpiritFloatingScene::kPerspectiveNear = 2.0f;
+const float SpiritFloatingScene::kPerspectiveFar = 200.0f;
+
+const GLfloat SpiritFloatingScene::kLightPosition[] = {0.0f, 10.0f, -10.0f, 1.0f};
+const GLfloat SpiritFloatingScene::kLightAmbientColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+const GLfloat SpiritFloatingScene::kLightDiffuseColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+const GLfloat SpiritFloatingScene::kLightSpecularColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
+
+const glm::mat4 SpiritFloatingScene::kViewMatrix =
+    glm::lookAt(glm::vec3(0.0f, 0.0f, -30.0f), glm::vec3(0.0f),
+                glm::vec3(0.0f, 1.0f, 0.0f));
 
 SpiritFloatingScene::SpiritFloatingScene()
 : initialize_(false), spirit_() {
 }
 
-int SpiritFloatingScene::Initialize() {
+int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
   if (initialize_) {
     return 1;
   }
@@ -53,15 +76,23 @@ int SpiritFloatingScene::Initialize() {
     return -1;
   }
 
+  // Set up view-port
+  glViewport(0, 0, static_cast<GLsizei>(window_size.x), static_cast<GLsizei>(window_size.y));
+  glEnable(GL_DEPTH_TEST);
+
+  // Set up projection matrix
+  glMatrixMode(GL_PROJECTION);
+  glLoadIdentity();
+  glLoadMatrixf(
+      glm::value_ptr(
+          glm::perspective(kPerspectiveFovy, window_size.x / window_size.y, kPerspectiveNear,
+                           kPerspectiveFar)));
+
   // Set up lighting
-  static GLfloat position[] = {0.0f, 10.0f, -10.0f, 1.0f};
-  static GLfloat ambient[] = {1.0f, 1.0f, 1.0f, 1.0f};
-  static GLfloat diffuse[] = {1.0f, 1.0f, 1.0f, 1.0f};
-  static GLfloat specular[] = {0.1f, 0.1f, 0.1f, 1.0f};
-  glLightfv(GL_LIGHT0, GL_POSITION, position);
-  glLightfv(GL_LIGHT0, GL_AMBIENT, ambient);
-  glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse);
-  glLightfv(GL_LIGHT0, GL_SPECULAR, specular);
+  glLightfv(GL_LIGHT0, GL_POSITION, kLightPosition);
+  glLightfv(GL_LIGHT0, GL_AMBIENT, kLightAmbientColor);
+  glLightfv(GL_LIGHT0, GL_DIFFUSE, kLightDiffuseColor);
+  glLightfv(GL_LIGHT0, GL_SPECULAR, kLightSpecularColor);
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
 
@@ -81,35 +112,35 @@ void SpiritFloatingScene::Finalize() {
   spirit_.Finalize();
 }
 
-void SpiritFloatingScene::Update(float elapsed_time) {
+void SpiritFloatingScene::Update(float elapsed_time, const glm::vec2 &window_size) {
+  UNUSED(window_size);
+
   if (!initialize_) {
     return;
   }
+
   spirit_.Update(elapsed_time);
   return;
 }
 
-void SpiritFloatingScene::Draw() {
+void SpiritFloatingScene::Draw(const glm::vec2 &window_size) {
+  UNUSED(window_size);
+
   if (!initialize_) {
     return;
   }
-  // setup material
-  GLfloat ambient[] = {0.1f, 0.1f, 0.1f, 1.0f};
-  GLfloat diffuse[] = {0.1f, 0.1f, 0.1f, 1.0f};
-  GLfloat specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
-  GLfloat shininess[] = {1.0f};
-  glMaterialfv(GL_FRONT, GL_AMBIENT, ambient);
-  glMaterialfv(GL_FRONT, GL_DIFFUSE, diffuse);
-  glMaterialfv(GL_FRONT, GL_SPECULAR, specular);
-  glMaterialfv(GL_FRONT, GL_SHININESS, shininess);
 
-  // draw sphere
+  glPushMatrix();
+  glMatrixMode(GL_MODELVIEW);
+  glLoadMatrixf(glm::value_ptr(kViewMatrix));
   spirit_.Draw();
+  glPopMatrix();
 }
 
 int SpiritFloatingScene::OnMouseButtonDown(unsigned char button,
                                            const glm::vec2& cursor_pos) {
   UNUSED(button);
   UNUSED(cursor_pos);
+
   return 0;
 }

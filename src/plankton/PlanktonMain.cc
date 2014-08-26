@@ -23,6 +23,7 @@ static const Uint32 kWindowWidth = 800;
 static const Uint32 kWindowHeight = 600;
 static const Uint32 kIdealFrameRate = 60;
 
+static const glm::vec2 kWindowSize = glm::vec2(kWindowWidth, kWindowHeight);
 static const int kGameLoopInterval = 1000 / kIdealFrameRate;
 static const float kGameLoopIntervalSec = 1.0f / kIdealFrameRate;
 static const int kFPSCountSamplingTime = 1000;
@@ -99,8 +100,9 @@ int PlanktonMain(int argc, char *argv[], const char *config_path) {
   }
 
   // Initialize the game
-  if (game.Initialize(glm::vec2(kWindowWidth, kWindowHeight)) != 0) {
-    LOGGER.Error("Failed to initialize the game objects");
+  int ret = game.Initialize();
+  if (ret < 0) {
+    LOGGER.Error("Failed to initialize the game objects (ret: %d)");
     PlanktonCleanUp();
     return -1;
   }
@@ -128,12 +130,12 @@ int PlanktonMain(int argc, char *argv[], const char *config_path) {
           if (event.key.keysym.sym == SDLK_ESCAPE) {
             escape_loop = true;
           } else {
-            game.OnKeyboardDown(event.key.keysym.sym);
+            game.OnKeyboardDown(event.key.keysym.sym, kWindowSize);
           }
           break;
         case SDL_MOUSEBUTTONDOWN:
           game.OnMouseButtonDown(event.button.button, event.button.x, event.button.y,
-                                 glm::vec2(kWindowWidth, kWindowHeight));
+                                 kWindowSize);
           break;
       }
     }
@@ -142,10 +144,10 @@ int PlanktonMain(int argc, char *argv[], const char *config_path) {
     }
 
     // Update the game
-    game.Update(kGameLoopIntervalSec);
+    game.Update(kGameLoopIntervalSec, kWindowSize);
 
     // Draw the objects
-    game.Draw(glm::vec2(kWindowWidth, kWindowHeight));
+    game.Draw(kWindowSize);
     if (TwDraw() == 0) {
       LOGGER.Error("Failed to draw the tweaker (errmsg: %s)", TwGetLastError());
       loop_stat = -1;
