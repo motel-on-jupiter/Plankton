@@ -1,8 +1,8 @@
 /**
  * Copyright (C) 2014 The Motel on Jupiter
  */
-#ifndef COLORDEF_H_
-#define COLORDEF_H_
+#ifndef COLORSAMPLE_H_
+#define COLORSAMPLE_H_
 
 // Web colors (http://www.w3.org/TR/REC-html40/types.html#h-6.5)
 namespace WebColor {
@@ -175,4 +175,4 @@ namespace X11Color {
   static const unsigned char kYellowGreen[]    = {0x9A, 0xCD, 0x32};
 }
 
-#endif /* COLORDEF_H_ */
+#endif /* COLORSAMPLE_H_ */

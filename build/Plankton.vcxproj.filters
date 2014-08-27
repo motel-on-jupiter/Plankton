@@ -13,9 +13,6 @@
     <Filter Include="src\util\config">
       <UniqueIdentifier>{a719a2c5-4b78-43e1-8454-7a38125ee391}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\util\def">
-      <UniqueIdentifier>{3452b8a5-93f3-40e2-9981-b3c0e9b3600f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\util\logging">
       <UniqueIdentifier>{6341086d-636c-424f-843c-96457097abb0}</UniqueIdentifier>
     </Filter>
@@ -182,9 +179,6 @@
     <ClInclude Include="..\src\util\logging\emitter\FileLogEmitter.h">
       <Filter>src\util\logging\emitter</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\util\def\ColorDef.h">
-      <Filter>src\util\def</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\util\config\reader\INIReader.h">
       <Filter>src\util\config\reader</Filter>
     </ClInclude>
@@ -226,6 +220,9 @@
     </ClInclude>
     <ClInclude Include="..\src\plankton\scene\SpiritFloatingScene.h">
       <Filter>src\plankton\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\util\color_sample.h">
+      <Filter>src\util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

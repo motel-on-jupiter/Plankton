@@ -56,10 +56,10 @@
     <ClInclude Include="..\src\plankton\PlanktonMain.h" />
     <ClInclude Include="..\src\plankton\PlanktonTweakerContext.h" />
     <ClInclude Include="..\src\plankton\scene\SpiritFloatingScene.h" />
+    <ClInclude Include="..\src\util\color_sample.h" />
     <ClInclude Include="..\src\util\config\ini.h" />
     <ClInclude Include="..\src\util\config\reader\GLINIReader.h" />
     <ClInclude Include="..\src\util\config\reader\INIReader.h" />
-    <ClInclude Include="..\src\util\def\ColorDef.h" />
     <ClInclude Include="..\src\util\logging\emitter\DebuggerConsoleLogEmitter.h" />
     <ClInclude Include="..\src\util\logging\emitter\FileLogEmitter.h" />
     <ClInclude Include="..\src\util\logging\emitter\LogEmitter.h" />
