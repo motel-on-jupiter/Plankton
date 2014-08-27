@@ -120,6 +120,9 @@
     <ClCompile Include="..\src\plankton\scene\SpiritFloatingScene.cc">
       <Filter>src\plankton\scene</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\plankton\scene\SpectrumWaveScene.cc">
+      <Filter>src\plankton\scene</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\util\logging\Logger.h">
@@ -223,6 +226,9 @@
     </ClInclude>
     <ClInclude Include="..\src\util\color_sample.h">
       <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\plankton\scene\SpectrumWaveScene.h">
+      <Filter>src\plankton\scene</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

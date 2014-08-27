@@ -10,6 +10,7 @@
 #include <SDL_video.h>
 
 #include "plankton/scene/SpiritFloatingScene.h"
+#include "plankton/scene/SpectrumWaveScene.h"
 #include "util/logging/Logger.h"
 #include "util/macro_util.h"
 
@@ -23,7 +24,13 @@ PlanktonGame::~PlanktonGame() {
 int PlanktonGame::Initialize() {
   PlanktonGameSceneInterface *scene = new SpiritFloatingScene();
   if (scene == nullptr) {
-    LOGGER.Error("Failed to create the scene object");
+    LOGGER.Error("Failed to create the sprit floating scene");
+    return -1;
+  }
+  scenes_.push_back(scene);
+  scene = new SpectrumWaveScene();
+  if (scene == nullptr) {
+    LOGGER.Error("Failed to create the spectrum wave scene");
     return -1;
   }
   scenes_.push_back(scene);

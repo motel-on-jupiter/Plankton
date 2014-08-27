@@ -21,6 +21,7 @@
     <ClCompile Include="..\src\plankton\PlanktonGame.cc" />
     <ClCompile Include="..\src\plankton\PlanktonMain.cc" />
     <ClCompile Include="..\src\plankton\PlanktonTweakerContext.cc" />
+    <ClCompile Include="..\src\plankton\scene\SpectrumWaveScene.cc" />
     <ClCompile Include="..\src\plankton\scene\SpiritFloatingScene.cc" />
     <ClCompile Include="..\src\util\config\ini.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
@@ -55,6 +56,7 @@
     <ClInclude Include="..\src\plankton\PlanktonGame.h" />
     <ClInclude Include="..\src\plankton\PlanktonMain.h" />
     <ClInclude Include="..\src\plankton\PlanktonTweakerContext.h" />
+    <ClInclude Include="..\src\plankton\scene\SpectrumWaveScene.h" />
     <ClInclude Include="..\src\plankton\scene\SpiritFloatingScene.h" />
     <ClInclude Include="..\src\util\color_sample.h" />
     <ClInclude Include="..\src\util\config\ini.h" />
