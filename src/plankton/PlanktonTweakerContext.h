@@ -6,6 +6,7 @@
 
 struct PlanktonTweakerContext {
   int system_actual_fps;
+  float system_time_speed;
 
   PlanktonTweakerContext();
   ~PlanktonTweakerContext();
