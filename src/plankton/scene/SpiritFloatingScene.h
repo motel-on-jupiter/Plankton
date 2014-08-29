@@ -4,17 +4,18 @@
 #ifndef SPIRITFLOATINGSCENE_H_
 #define SPIRITFLOATINGSCENE_H_
 
+#include <vector>
 #include "entity/BaseEntity.h"
 #include "plankton/PlanktonGame.h"
 
-class Spirit : public BaseEntity {
+class BaseSpirit : public BaseEntity {
  public:
-  Spirit() : BaseEntity(), quadric_(nullptr), speed_(50.0f), goal_() {}
-  ~Spirit() {}
+  BaseSpirit() : BaseEntity(), quadric_(nullptr) {}
+  virtual ~BaseSpirit() {}
 
   virtual int Initialize();
   virtual void Finalize();
-  virtual void Update(float elapsed_time);
+  virtual void Update(float elapsed_time) = 0;
   virtual void Draw();
 
  private:
@@ -24,8 +25,30 @@ class Spirit : public BaseEntity {
   static const GLfloat kShininess;
 
   GLUquadric *quadric_;
-  float speed_;
+};
+
+class RandomSpirit : public BaseSpirit {
+ public:
+  RandomSpirit() : BaseSpirit(), goal_(), speed_(50.0f) {}
+  virtual ~RandomSpirit() {}
+
+  virtual void Update(float elapsed_time);
+
+ private:
   glm::vec3 goal_;
+  float speed_;
+};
+
+class CatmullRomSpirit : public BaseSpirit {
+ public:
+  CatmullRomSpirit();
+  virtual ~CatmullRomSpirit() {}
+
+  virtual void Update(float elapsed_time);
+
+ private:
+  glm::vec3 targets_[4];
+  float time_;
 };
 
 class SpiritFloatingScene : public PlanktonGameSceneInterface {
@@ -50,6 +73,6 @@ class SpiritFloatingScene : public PlanktonGameSceneInterface {
   static const glm::mat4 kViewMatrix;
 
   bool initialize_;
-  Spirit spirit_;
+  std::vector<BaseSpirit *> spirits_;
 };
 #endif /* SPIRITSCENE_H_ */

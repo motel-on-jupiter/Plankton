@@ -3,17 +3,18 @@
  */
 #include "SpiritFloatingScene.h"
 #include <algorithm>
+#include <boost/foreach.hpp>
 #include "util/logging/Logger.h"
 #include "util/wrapper/glgraphics_wrap.h"
 #include "util/macro_util.h"
 #include "util/math_aux.h"
 
-const GLfloat Spirit::kAmbientColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
-const GLfloat Spirit::kDiffuseColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
-const GLfloat Spirit::kSpecularColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
-const GLfloat Spirit::kShininess = 1.0f;
+const GLfloat BaseSpirit::kAmbientColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
+const GLfloat BaseSpirit::kDiffuseColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
+const GLfloat BaseSpirit::kSpecularColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
+const GLfloat BaseSpirit::kShininess = 1.0f;
 
-int Spirit::Initialize() {
+int BaseSpirit::Initialize() {
   set_pos(glm::vec3(0.0f, 5.0f, 0.0f));
 
   quadric_ = gluNewQuadric();
@@ -24,12 +25,24 @@ int Spirit::Initialize() {
   return 0;
 }
 
-void Spirit::Finalize() {
+void BaseSpirit::Finalize() {
   gluDeleteQuadric(quadric_);
   quadric_ = nullptr;
 }
 
-void Spirit::Update(float elapsed_time) {
+void BaseSpirit::Draw() {
+  glMaterialfv(GL_FRONT, GL_AMBIENT, kAmbientColor);
+  glMaterialfv(GL_FRONT, GL_DIFFUSE, kDiffuseColor);
+  glMaterialfv(GL_FRONT, GL_SPECULAR, kSpecularColor);
+  glMaterialfv(GL_FRONT, GL_SHININESS, &kShininess);
+
+  glPushMatrix();
+  glMultMatrixf(glm::value_ptr(glm::translate(pos())));
+  gluSphere(quadric_, 1.0, 30, 30);
+  glPopMatrix();
+}
+
+void RandomSpirit::Update(float elapsed_time) {
   if (is_fzero(glm::distance(pos(), goal_))) {
     goal_ = glm::linearRand(glm::vec3(-10.0f), glm::vec3(10.0f));
   }
@@ -37,14 +50,23 @@ void Spirit::Update(float elapsed_time) {
   set_pos(pos() + glm::normalize(goal_ - pos()) * dist);
 }
 
-void Spirit::Draw() {
-  glMaterialfv(GL_FRONT, GL_AMBIENT, kAmbientColor);
-  glMaterialfv(GL_FRONT, GL_DIFFUSE, kDiffuseColor);
-  glMaterialfv(GL_FRONT, GL_SPECULAR, kSpecularColor);
-  glMaterialfv(GL_FRONT, GL_SHININESS, &kShininess);
+CatmullRomSpirit::CatmullRomSpirit()
+: BaseSpirit(), targets_(), time_(0.0f) {
+  for (int i=0; i<4; ++i) {
+    targets_[i] = glm::linearRand(glm::vec3(-10.0f), glm::vec3(10.0f));
+  }
+}
 
-  glMultMatrixf(glm::value_ptr(glm::translate(pos())));
-  gluSphere(quadric_, 1.0, 30, 30);
+void CatmullRomSpirit::Update(float elapsed_time) {
+  while (time_ > 1.0f) {
+    for (int i=0; i<3; ++i) {
+      targets_[i] = targets_[i+1];
+    }
+    targets_[3] = glm::linearRand(glm::vec3(-10.0f), glm::vec3(10.0f));
+    time_ -= 1.0f;
+  }
+  set_pos(glm::catmullRom(targets_[0], targets_[1], targets_[2], targets_[3], time_));
+  time_ += elapsed_time;
 }
 
 const float SpiritFloatingScene::kPerspectiveFovy = glm::radians(45.0f);
@@ -61,7 +83,7 @@ const glm::mat4 SpiritFloatingScene::kViewMatrix =
                 glm::vec3(0.0f, 1.0f, 0.0f));
 
 SpiritFloatingScene::SpiritFloatingScene()
-: initialize_(false), spirit_() {
+: initialize_(false), spirits_() {
 }
 
 int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
@@ -70,11 +92,28 @@ int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
   }
 
   // Initialize spirit object
-  int ret = spirit_.Initialize();
-  if (ret < 0) {
-    LOGGER.Error("Failed to initialize the spirit object (ret: %d)", ret);
+  BaseSpirit *spirit = new RandomSpirit();
+  if (spirit == nullptr) {
+    LOGGER.Error("Failed to create the random spirit object");
     return -1;
   }
+  int ret = spirit->Initialize();
+  if (ret < 0) {
+    LOGGER.Error("Failed to initialize the random spirit object (ret: %d)", ret);
+    return -1;
+  }
+  spirits_.push_back(spirit);
+  spirit = new CatmullRomSpirit();
+  if (spirit == nullptr) {
+    LOGGER.Error("Failed to create the catmull row spirit object");
+    return -1;
+  }
+  ret = spirit->Initialize();
+  if (ret < 0) {
+    LOGGER.Error("Failed to initialize the catmull row spirit object (ret: %d)", ret);
+    return -1;
+  }
+  spirits_.push_back(spirit);
 
   // Set up view-port
   glViewport(0, 0, static_cast<GLsizei>(window_size.x), static_cast<GLsizei>(window_size.y));
@@ -109,7 +148,11 @@ void SpiritFloatingScene::Finalize() {
   glDisable(GL_LIGHTING);
   glDisable(GL_LIGHT0);
 
-  spirit_.Finalize();
+  BOOST_FOREACH(BaseSpirit *spirit, spirits_) {
+    spirit->Finalize();
+    delete spirit;
+  }
+  spirits_.clear();
 }
 
 void SpiritFloatingScene::Update(float elapsed_time, const glm::vec2 &window_size) {
@@ -119,7 +162,9 @@ void SpiritFloatingScene::Update(float elapsed_time, const glm::vec2 &window_siz
     return;
   }
 
-  spirit_.Update(elapsed_time);
+  BOOST_FOREACH(BaseSpirit *spirit, spirits_) {
+    spirit->Update(elapsed_time);
+  }
   return;
 }
 
@@ -133,7 +178,9 @@ void SpiritFloatingScene::Draw(const glm::vec2 &window_size) {
   glPushMatrix();
   glMatrixMode(GL_MODELVIEW);
   glLoadMatrixf(glm::value_ptr(kViewMatrix));
-  spirit_.Draw();
+  BOOST_FOREACH(BaseSpirit *spirit, spirits_) {
+    spirit->Draw();
+  }
   glPopMatrix();
 }
 
