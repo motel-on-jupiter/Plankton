@@ -51,6 +51,19 @@ class CatmullRomSpirit : public BaseSpirit {
   float time_;
 };
 
+class HermiteSpirit : public BaseSpirit {
+ public:
+  HermiteSpirit();
+  virtual ~HermiteSpirit() {}
+
+  virtual void Update(float elapsed_time);
+
+ private:
+  glm::vec3 vs_[2];
+  glm::vec3 ts_[2];
+  float time_;
+};
+
 class SpiritFloatingScene : public PlanktonGameSceneInterface {
  public:
   SpiritFloatingScene();

@@ -50,6 +50,26 @@ void RandomSpirit::Update(float elapsed_time) {
   set_pos(pos() + glm::normalize(goal_ - pos()) * dist);
 }
 
+HermiteSpirit::HermiteSpirit()
+: BaseSpirit(), vs_(), ts_(), time_(0.0f) {
+  for (int i=0; i<2; ++i) {
+    vs_[i] = glm::linearRand(glm::vec3(-10.0f), glm::vec3(10.0f));
+    ts_[i] = glm::sphericalRand(1.0f);
+  }
+}
+
+void HermiteSpirit::Update(float elapsed_time) {
+  while (time_ > 1.0f) {
+    vs_[0] = vs_[1];
+    ts_[0] = ts_[1];
+    vs_[1] = glm::linearRand(glm::vec3(-10.0f), glm::vec3(10.0f));
+    ts_[1] = glm::sphericalRand(1.0f);
+    time_ -= 1.0f;
+  }
+  set_pos(glm::hermite(vs_[0], ts_[0], vs_[1], ts_[1], time_));
+  time_ += elapsed_time;
+}
+
 CatmullRomSpirit::CatmullRomSpirit()
 : BaseSpirit(), targets_(), time_(0.0f) {
   for (int i=0; i<4; ++i) {
@@ -111,6 +131,17 @@ int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
   ret = spirit->Initialize();
   if (ret < 0) {
     LOGGER.Error("Failed to initialize the catmull row spirit object (ret: %d)", ret);
+    return -1;
+  }
+  spirits_.push_back(spirit);
+  spirit = new HermiteSpirit();
+  if (spirit == nullptr) {
+    LOGGER.Error("Failed to create the hermite spirit object");
+    return -1;
+  }
+  ret = spirit->Initialize();
+  if (ret < 0) {
+    LOGGER.Error("Failed to initialize the hermite spirit object (ret: %d)", ret);
     return -1;
   }
   spirits_.push_back(spirit);
