@@ -33,5 +33,7 @@ class SpiritFloatingScene : public PlanktonGameSceneInterface {
 
   bool initialize_;
   std::vector<BaseSpirit *> spirits_;
+  std::vector<GLuint> shaders_;
+  GLuint shader_program_;
 };
 #endif /* SPIRITFLOATINGSCENE_H_ */
