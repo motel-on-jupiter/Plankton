@@ -12,6 +12,7 @@
 class LogEmitter;
 
 const char *Logger::kLogPrefixes[] = { "",         //kNoneLevel
+    "[TRACE]",  //kTrace
     "[DEBUG]",  //kDebug
     "[INFO]",   //kInfo
     "[NOTICE]",  //kNotice
@@ -58,6 +59,17 @@ void Logger::Emitv(Level level, const char *format, va_list args) {
   for (; emitters_.end() != it; ++it) {
     (*it)->Emitv(kLogPrefixes[level], format, args);
   }
+}
+
+void Logger::Trace(const char *format, ...) {
+  va_list args;
+  va_start(args, format);
+  Emitv(kTrace, format, args);
+  va_end(args);
+}
+
+void Logger::Tracev(const char *format, va_list args) {
+  Emitv(kTrace, format, args);
 }
 
 void Logger::Debug(const char *format, ...) {

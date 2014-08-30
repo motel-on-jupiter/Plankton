@@ -16,6 +16,7 @@ class Logger : public boost::serialization::singleton<Logger> {
  public:
   enum Level {
     kNoneLevel,
+    kTrace,
     kDebug,
     kInfo,
     kNotice,
@@ -34,6 +35,8 @@ class Logger : public boost::serialization::singleton<Logger> {
   void Emit(Level level, const char *format, ...);
   void Emitv(Level level, const char *format, va_list args);
 
+  void Trace(const char *format, ...);
+  void Tracev(const char *format, va_list args);
   void Debug(const char *format, ...);
   void Debugv(const char *format, va_list args);
   void Info(const char *format, ...);
