@@ -6,5 +6,6 @@
 #include "util/wrapper/glgraphics_wrap.h"
 #include "util/wrapper/glm_wrap.h"
 #include "util/wrapper/sdl_wrap.h"
+#include "util/assert_util.h"
 #include "util/macro_util.h"
 #include "util/math_aux.h"
