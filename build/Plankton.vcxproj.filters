@@ -147,6 +147,9 @@
     <ClCompile Include="..\src\graphics\GLShader.cc">
       <Filter>src\graphics</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\graphics\GLFrameBuffer.cc">
+      <Filter>src\graphics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\util\logging\Logger.h">
@@ -261,6 +264,9 @@
       <Filter>src\plankton\actor</Filter>
     </ClInclude>
     <ClInclude Include="..\src\graphics\GLShader.h">
+      <Filter>src\graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\graphics\GLFrameBuffer.h">
       <Filter>src\graphics</Filter>
     </ClInclude>
   </ItemGroup>

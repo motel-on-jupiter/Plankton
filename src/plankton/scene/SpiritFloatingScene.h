@@ -5,6 +5,7 @@
 #define SPIRITFLOATINGSCENE_H_
 
 #include <vector>
+#include "graphics/GLFrameBuffer.h"
 #include "graphics/GLShader.h"
 #include "plankton/actor/Spirit.h"
 #include "plankton/PlanktonGame.h"
@@ -34,10 +35,7 @@ class SpiritFloatingSceneRenderer : public PlanktonGameSceneRendererInterface {
   bool initialized_;
   std::vector<GLShader *> shaders_;
   std::vector<GLShaderProgram *> shaderps_;
-  GLuint framebuf_;
-  GLuint renderbuf_;
-  GLuint colortex_;
-  GLuint depthtex_;
+  GLFrameBuffer framebuf_;
 };
 
 class SpiritFloatingScene : public PlanktonGameSceneInterface {

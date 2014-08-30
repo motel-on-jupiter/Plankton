@@ -36,10 +36,7 @@ SpiritFloatingSceneRenderer::SpiritFloatingSceneRenderer()
     : initialized_(false),
       shaders_(),
       shaderps_(),
-      framebuf_(0),
-      renderbuf_(0),
-      colortex_(0),
-      depthtex_(0) {
+      framebuf_() {
 }
 
 SpiritFloatingSceneRenderer::~SpiritFloatingSceneRenderer() {
@@ -52,39 +49,11 @@ int SpiritFloatingSceneRenderer::Initialize(const glm::vec2 &window_size) {
     return 1;
   }
 
-  glGenFramebuffers(1, &framebuf_);
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuf_);
-
-  glGenRenderbuffers(1, &renderbuf_);
-  glBindRenderbuffer(GL_RENDERBUFFER, renderbuf_);
-  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24,
-                        static_cast<GLsizei>(window_size.x),
-                        static_cast<GLsizei>(window_size.y));
-  glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
-                            GL_RENDERBUFFER, renderbuf_);
-
-  glGenTextures(1, &colortex_);
-  glBindTexture(GL_TEXTURE_2D, colortex_);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, static_cast<GLsizei>(window_size.x),
-               static_cast<GLsizei>(window_size.y), 0, GL_RGBA,
-               GL_UNSIGNED_BYTE, nullptr);
-  glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, colortex_, 0);
-  GLenum attachments[] = { GL_COLOR_ATTACHMENT0 };
-  glDrawBuffers(1, attachments);
-
-  glGenTextures(1, &depthtex_);
-  glBindTexture(GL_TEXTURE_2D, depthtex_);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
-               static_cast<GLsizei>(window_size.x),
-               static_cast<GLsizei>(window_size.y), 0, GL_DEPTH_COMPONENT,
-               GL_FLOAT, nullptr);
-  glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthtex_, 0);
-
-  if (glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
-    LOGGER.Error("Failed to complete frame buffer");
+  if (framebuf_.SetUp(window_size) < 0) {
+    LOGGER.Error("Faield to set up the frame buffer");
+    return -1;
   }
-
-  glBindTexture(GL_TEXTURE_2D, colortex_);
+  glBindTexture(GL_TEXTURE_2D, framebuf_.colortex());
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -130,6 +99,7 @@ int SpiritFloatingSceneRenderer::Initialize(const glm::vec2 &window_size) {
     }
     shaderps_.push_back(program);
   }
+  initialized_ = true;
   return 0;
 }
 
@@ -144,6 +114,8 @@ void SpiritFloatingSceneRenderer::Finalize() {
     delete *it;
   }
   shaders_.clear();
+
+  framebuf_.CleanUp();
 }
 
 void SpiritFloatingSceneRenderer::Begin(const glm::vec2 &window_size) {
@@ -167,7 +139,7 @@ void SpiritFloatingSceneRenderer::Begin(const glm::vec2 &window_size) {
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
 
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuf_);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuf_.name());
   glUseProgram(shaderps_[0]->name());
 
   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
@@ -188,7 +160,7 @@ void SpiritFloatingSceneRenderer::End() {
   glUseProgram(shaderps_[1]->name());
 
   glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, colortex_);
+  glBindTexture(GL_TEXTURE_2D, framebuf_.colortex());
 
   static const GLfloat quad_vertices[4][3] = { { -1.0f, -1.0f, 0.0f }, { -1.0f,
       1.0f, 0.0f }, { 1.0f, 1.0f, 0.0f }, { 1.0f, -1.0f, 0.0f }, };
