@@ -1,12 +1,25 @@
 /**
  * Copyright (C) 2014 The Motel on Jupiter
  */
-
 #ifndef PLANKTON_GAME_H_
 #define PLANKTON_GAME_H_
 
 #include <vector>
 #include <SDL_ttf.h>
+
+class PlanktonGameSceneRendererInterface {
+ public:
+  PlanktonGameSceneRendererInterface() {
+  }
+  virtual ~PlanktonGameSceneRendererInterface() {
+  }
+
+  virtual int Initialize(const glm::vec2 &window_size) = 0;
+  virtual void Finalize() = 0;
+
+  virtual void Begin() = 0;
+  virtual void End() = 0;
+};
 
 class PlanktonGameSceneInterface {
  public:

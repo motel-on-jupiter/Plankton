@@ -8,16 +8,16 @@
 #include "plankton/actor/Spirit.h"
 #include "plankton/PlanktonGame.h"
 
-class SpiritFloatingSceneRenderer {
+class SpiritFloatingSceneRenderer : public PlanktonGameSceneRendererInterface {
  public:
   SpiritFloatingSceneRenderer();
-  ~SpiritFloatingSceneRenderer();
+  virtual ~SpiritFloatingSceneRenderer();
 
-  int Initialize(const glm::vec2 &window_size);
-  void Finalize();
+  virtual int Initialize(const glm::vec2 &window_size);
+  virtual void Finalize();
 
-  void Begin();
-  void End();
+  virtual void Begin();
+  virtual void End();
 
  private:
   static const float kPerspectiveFovy;
