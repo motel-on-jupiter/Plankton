@@ -45,6 +45,7 @@
     <ClCompile Include="..\src\util\logging\Logger.cc" />
     <ClCompile Include="..\src\util\measurement\FPSCounter.cc" />
     <ClCompile Include="..\src\util\wrapper\atb_wrap.cc" />
+    <ClCompile Include="..\src\util\wrapper\glgraphics_wrap.cc" />
     <ClCompile Include="..\src\util\wrapper\sdl_wrap.cc" />
     <ClCompile Include="..\src\util\wrapper\TwEventSDL20.c">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>

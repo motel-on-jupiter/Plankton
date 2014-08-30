@@ -20,4 +20,12 @@ class _dummy {
 };
 }
 
+/**
+ * Auxiliary functions
+ */
+#include <vector>
+extern int glCompileShaderFile(GLuint shader, const char *path);
+extern int glLinkProgramWithShaders(GLuint program,
+                                    std::vector<GLuint> &shaders);
+
 #endif /* GLGRAPHICSWRAP_H_ */
