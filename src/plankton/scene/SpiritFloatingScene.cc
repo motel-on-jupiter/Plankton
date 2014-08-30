@@ -48,8 +48,8 @@ void RandomSpirit::Update(float elapsed_time) {
   set_pos(pos() + glm::normalize(goal_ - pos()) * dist);
 }
 
-HermiteSpirit::HermiteSpirit(const glm::vec3 &color)
-: BaseSpirit(color), vs_(), ts_(), time_(0.0f) {
+HermiteSpirit::HermiteSpirit(const glm::vec3 &color, float step)
+: BaseSpirit(color), vs_(), ts_(), time_(0.0f), step_(step) {
   for (int i=0; i<2; ++i) {
     vs_[i] = glm::linearRand(glm::vec3(-10.0f), glm::vec3(10.0f));
     ts_[i] = glm::sphericalRand(1.0f);
@@ -65,11 +65,11 @@ void HermiteSpirit::Update(float elapsed_time) {
     time_ -= 1.0f;
   }
   set_pos(glm::hermite(vs_[0], ts_[0], vs_[1], ts_[1], time_));
-  time_ += elapsed_time;
+  time_ += step_ * elapsed_time;
 }
 
-CatmullRomSpirit::CatmullRomSpirit(const glm::vec3 &color)
-: BaseSpirit(color), targets_(), time_(0.0f) {
+CatmullRomSpirit::CatmullRomSpirit(const glm::vec3 &color, float step)
+: BaseSpirit(color), targets_(), time_(0.0f), step_(step) {
   for (int i=0; i<4; ++i) {
     targets_[i] = glm::linearRand(glm::vec3(-10.0f), glm::vec3(10.0f));
   }
@@ -84,7 +84,7 @@ void CatmullRomSpirit::Update(float elapsed_time) {
     time_ -= 1.0f;
   }
   set_pos(glm::catmullRom(targets_[0], targets_[1], targets_[2], targets_[3], time_));
-  time_ += elapsed_time;
+  time_ += step_ * elapsed_time;
 }
 
 const float SpiritFloatingScene::kPerspectiveFovy = glm::radians(45.0f);
@@ -110,7 +110,7 @@ int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
   }
 
   // Initialize spirit object
-  BaseSpirit *spirit = new RandomSpirit(X11Color::to_fvec(X11Color::kGray));
+  BaseSpirit *spirit = new RandomSpirit(X11Color::to_fvec(X11Color::kGray), 50.0f);
   if (spirit == nullptr) {
     LOGGER.Error("Failed to create the random spirit object");
     return -1;
@@ -121,7 +121,7 @@ int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
     return -1;
   }
   spirits_.push_back(spirit);
-  spirit = new CatmullRomSpirit(X11Color::to_fvec(X11Color::kGreen));
+  spirit = new CatmullRomSpirit(X11Color::to_fvec(X11Color::kGreen), 1.0f);
   if (spirit == nullptr) {
     LOGGER.Error("Failed to create the catmull row spirit object");
     return -1;
@@ -132,7 +132,7 @@ int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
     return -1;
   }
   spirits_.push_back(spirit);
-  spirit = new HermiteSpirit(X11Color::to_fvec(X11Color::kOrange));
+  spirit = new HermiteSpirit(X11Color::to_fvec(X11Color::kOrange), 1.0f);
   if (spirit == nullptr) {
     LOGGER.Error("Failed to create the hermite spirit object");
     return -1;

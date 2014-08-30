@@ -28,7 +28,8 @@ class BaseSpirit : public BaseEntity {
 
 class RandomSpirit : public BaseSpirit {
  public:
-  RandomSpirit(const glm::vec3 &color) : BaseSpirit(color), goal_(), speed_(50.0f) {}
+  RandomSpirit(const glm::vec3 &color, float speed)
+ : BaseSpirit(color), goal_(), speed_(speed) {}
   virtual ~RandomSpirit() {}
 
   virtual void Update(float elapsed_time);
@@ -40,7 +41,7 @@ class RandomSpirit : public BaseSpirit {
 
 class CatmullRomSpirit : public BaseSpirit {
  public:
-  CatmullRomSpirit(const glm::vec3 &color);
+  CatmullRomSpirit(const glm::vec3 &color, float step);
   virtual ~CatmullRomSpirit() {}
 
   virtual void Update(float elapsed_time);
@@ -48,11 +49,12 @@ class CatmullRomSpirit : public BaseSpirit {
  private:
   glm::vec3 targets_[4];
   float time_;
+  float step_;
 };
 
 class HermiteSpirit : public BaseSpirit {
  public:
-  HermiteSpirit(const glm::vec3 &color);
+  HermiteSpirit(const glm::vec3 &color, float step);
   virtual ~HermiteSpirit() {}
 
   virtual void Update(float elapsed_time);
@@ -61,6 +63,7 @@ class HermiteSpirit : public BaseSpirit {
   glm::vec3 vs_[2];
   glm::vec3 ts_[2];
   float time_;
+  float step_;
 };
 
 class SpiritFloatingScene : public PlanktonGameSceneInterface {
