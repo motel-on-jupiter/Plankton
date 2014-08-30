@@ -31,7 +31,7 @@ const glm::mat4 SpiritFloatingSceneRenderer::kViewMatrix = glm::lookAt(
 SpiritFloatingSceneRenderer::SpiritFloatingSceneRenderer()
     : initialized_(false),
       shaders_(),
-      shader_program_(0) {
+      shader_program_() {
 }
 
 SpiritFloatingSceneRenderer::~SpiritFloatingSceneRenderer() {
@@ -43,27 +43,43 @@ int SpiritFloatingSceneRenderer::Initialize(const glm::vec2 &window_size) {
     LOGGER.Notice("Already initialized");
     return 1;
   }
-  GLuint shader = glCreateShader(GL_VERTEX_SHADER);
-  if (glCompileShaderFile(shader, "share/shader/v_pipeline.glsl") < 0) {
-    LOGGER.Error("Failed to compile vertex shader file");
+
+  Shader *vshader = new Shader(GL_VERTEX_SHADER,
+                               "share/shader/v_pipeline.glsl");
+  if (vshader == nullptr) {
+    LOGGER.Error("Failed to create vertex shader object");
     return -1;
   }
-  shaders_.push_back(shader);
-  shader = glCreateShader(GL_FRAGMENT_SHADER);
-  if (glCompileShaderFile(shader, "share/shader/f_pipeline.glsl") < 0) {
-    LOGGER.Error("Failed to compile fragment shader file");
+  if (vshader->Compile() < 0) {
+    LOGGER.Error("Failed to compile vertex shader");
+    delete vshader;
+    return -1;
+  }
+  shaders_.push_back(vshader);
+
+  Shader *fshader = new Shader(GL_FRAGMENT_SHADER,
+                               "share/shader/f_pipeline.glsl");
+  if (fshader == nullptr) {
+    LOGGER.Error("Failed to create fragment shader object");
+    return -1;
+  }
+  if (fshader->Compile() < 0) {
+    LOGGER.Error("Failed to compile fragment shader");
+    delete fshader;
     Finalize();
     return -1;
   }
-  shaders_.push_back(shader);
+  shaders_.push_back(fshader);
 
-  shader_program_ = glCreateProgram();
-  if (glLinkProgramWithShaders(shader_program_, shaders_) < 0) {
+  shader_program_.PushShader(*vshader);
+  shader_program_.PushShader(*fshader);
+  if (shader_program_.Link() < 0) {
     LOGGER.Error("Failed to link program");
     Finalize();
     return -1;
   }
-  glUseProgram(shader_program_);
+
+  glUseProgram(shader_program_.name());
 
   // Set up view-port
   glViewport(0, 0, static_cast<GLsizei>(window_size.x),
@@ -92,13 +108,9 @@ int SpiritFloatingSceneRenderer::Initialize(const glm::vec2 &window_size) {
 void SpiritFloatingSceneRenderer::Finalize() {
   initialized_ = false;
 
-  if (shader_program_ != 0) {
-    glDeleteProgram(shader_program_);
-    shader_program_ = 0;
-  }
-
-  BOOST_FOREACH(GLuint shader, shaders_) {
-    glDeleteShader(shader);
+  shader_program_.Clean();
+  for (auto it = shaders_.begin(); it != shaders_.end(); ++it) {
+    delete *it;
   }
   shaders_.clear();
 

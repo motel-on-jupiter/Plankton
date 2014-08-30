@@ -5,6 +5,7 @@
 #define SPIRITFLOATINGSCENE_H_
 
 #include <vector>
+#include "graphics/shader.h"
 #include "plankton/actor/Spirit.h"
 #include "plankton/PlanktonGame.h"
 
@@ -30,8 +31,8 @@ class SpiritFloatingSceneRenderer : public PlanktonGameSceneRendererInterface {
   static const glm::mat4 kViewMatrix;
 
   bool initialized_;
-  std::vector<GLuint> shaders_;
-  GLuint shader_program_;
+  std::vector<Shader *> shaders_;
+  ShaderProgram shader_program_;
 };
 
 class SpiritFloatingScene : public PlanktonGameSceneInterface {
