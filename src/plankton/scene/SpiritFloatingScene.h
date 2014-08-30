@@ -5,7 +5,7 @@
 #define SPIRITFLOATINGSCENE_H_
 
 #include <vector>
-#include "graphics/shader.h"
+#include "graphics/GLShader.h"
 #include "plankton/actor/Spirit.h"
 #include "plankton/PlanktonGame.h"
 
@@ -32,8 +32,8 @@ class SpiritFloatingSceneRenderer : public PlanktonGameSceneRendererInterface {
   static const char *kShaderPaths[];
 
   bool initialized_;
-  std::vector<Shader *> shaders_;
-  std::vector<ShaderProgram *> shaderps_;
+  std::vector<GLShader *> shaders_;
+  std::vector<GLShaderProgram *> shaderps_;
   GLuint framebuf_;
   GLuint renderbuf_;
   GLuint colortex_;

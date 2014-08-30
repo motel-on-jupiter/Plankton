@@ -90,7 +90,7 @@ int SpiritFloatingSceneRenderer::Initialize(const glm::vec2 &window_size) {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
   for (int i = 0; i < ARRAYSIZE(kShaderPaths) / 2; ++i) {
-    Shader *vshader = new Shader(GL_VERTEX_SHADER, kShaderPaths[i * 2]);
+    GLShader *vshader = new GLShader(GL_VERTEX_SHADER, kShaderPaths[i * 2]);
     if (vshader == nullptr) {
       LOGGER.Error("Failed to create vertex shader object");
       return -1;
@@ -102,7 +102,7 @@ int SpiritFloatingSceneRenderer::Initialize(const glm::vec2 &window_size) {
     }
     shaders_.push_back(vshader);
 
-    Shader *fshader = new Shader(GL_FRAGMENT_SHADER, kShaderPaths[i * 2 + 1]);
+    GLShader *fshader = new GLShader(GL_FRAGMENT_SHADER, kShaderPaths[i * 2 + 1]);
     if (fshader == nullptr) {
       LOGGER.Error("Failed to create fragment shader object");
       return -1;
@@ -115,7 +115,7 @@ int SpiritFloatingSceneRenderer::Initialize(const glm::vec2 &window_size) {
     }
     shaders_.push_back(fshader);
 
-    ShaderProgram *program = new ShaderProgram();
+    GLShaderProgram *program = new GLShaderProgram();
     if (program == nullptr) {
       LOGGER.Error("Failed to create shader program object");
       return -1;

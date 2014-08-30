@@ -1,13 +1,13 @@
 /**
  * Copyright (C) 2014 The Motel On Jupiter
  */
-#ifndef SHADER_H_
-#define SHADER_H_
+#ifndef GL_SHADER_H_
+#define GL_SHADER_H_
 
-class Shader {
+class GLShader {
  public:
-  Shader(GLenum type, const char *path);
-  ~Shader();
+  GLShader(GLenum type, const char *path);
+  ~GLShader();
 
   int Compile();
 
@@ -27,12 +27,12 @@ class Shader {
   GLuint name_;
 };
 
-class ShaderProgram {
+class GLShaderProgram {
  public:
-  ShaderProgram();
-  ~ShaderProgram();
+  GLShaderProgram();
+  ~GLShaderProgram();
 
-  void PushShader(const Shader &shader);
+  void PushShader(const GLShader &shader);
   int Link();
   void Clean();
 
@@ -45,4 +45,4 @@ class ShaderProgram {
   GLuint name_;
 };
 
-#endif /* SHADER_H_ */
+#endif /* GL_SHADER_H_ */

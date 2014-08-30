@@ -1,31 +1,31 @@
 /**
  * Copyright (C) 2014 The Motel On Jupiter
  */
-#include "Shader.h"
-#include "util/wrapper/glgraphics_wrap.h"
+#include "GLShader.h"
 #include "util/logging/Logger.h"
+#include "util/wrapper/glgraphics_wrap.h"
 
-Shader::Shader(GLenum type, const char *path)
+GLShader::GLShader(GLenum type, const char *path)
     : type_(type),
       path_(path),
       name_(0) {
 }
 
-Shader::~Shader() {
+GLShader::~GLShader() {
   if (name_ != 0) {
     glDeleteShader(name_);
   }
 }
 
-int Shader::Compile() {
+int GLShader::Compile() {
   name_ = glCreateShader(type_);
   if (name_ == 0) {
-    LOGGER.Error("Failed to create shader");
+    LOGGER.Error("Failed to create shader (type: %d)", type_);
     return -1;
   }
 
   if (glCompileShaderFile(name_, path_) < 0) {
-    LOGGER.Error("Failed to compile shader file");
+    LOGGER.Error("Failed to compile shader file (path: %s)", path_);
     glDeleteShader(name_);
     name_ = 0;
     return -1;
@@ -33,20 +33,20 @@ int Shader::Compile() {
   return 0;
 }
 
-ShaderProgram::ShaderProgram()
+GLShaderProgram::GLShaderProgram()
     : shaders_(),
       name_(0) {
 }
 
-ShaderProgram::~ShaderProgram() {
+GLShaderProgram::~GLShaderProgram() {
   Clean();
 }
 
-void ShaderProgram::PushShader(const Shader &shader) {
+void GLShaderProgram::PushShader(const GLShader &shader) {
   shaders_.push_back(shader.name());
 }
 
-int ShaderProgram::Link() {
+int GLShaderProgram::Link() {
   name_ = glCreateProgram();
   if (name_ == 0) {
     LOGGER.Error("Failed to create program");
@@ -62,7 +62,7 @@ int ShaderProgram::Link() {
   return 0;
 }
 
-void ShaderProgram::Clean() {
+void GLShaderProgram::Clean() {
   if (name_ != 0) {
     glDeleteProgram(name_);
     name_ = 0;

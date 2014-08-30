@@ -144,7 +144,7 @@
     <ClCompile Include="..\src\plankton\actor\Spirit.cc">
       <Filter>src\plankton\actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\graphics\Shader.cc">
+    <ClCompile Include="..\src\graphics\GLShader.cc">
       <Filter>src\graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -260,7 +260,7 @@
     <ClInclude Include="..\src\plankton\actor\Spirit.h">
       <Filter>src\plankton\actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\graphics\Shader.h">
+    <ClInclude Include="..\src\graphics\GLShader.h">
       <Filter>src\graphics</Filter>
     </ClInclude>
   </ItemGroup>

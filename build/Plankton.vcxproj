@@ -13,7 +13,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\entity\BaseEntity.cc" />
     <ClCompile Include="..\src\entity\EntityDraw.cc" />
-    <ClCompile Include="..\src\graphics\Shader.cc" />
+    <ClCompile Include="..\src\graphics\GLShader.cc" />
     <ClCompile Include="..\src\main.cc" />
     <ClCompile Include="..\src\pch\precompile.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -57,7 +57,7 @@
   <ItemGroup>
     <ClInclude Include="..\src\entity\BaseEntity.h" />
     <ClInclude Include="..\src\entity\EntityDraw.h" />
-    <ClInclude Include="..\src\graphics\Shader.h" />
+    <ClInclude Include="..\src\graphics\GLShader.h" />
     <ClInclude Include="..\src\pch\precompile.h" />
     <ClInclude Include="..\src\plankton\actor\Spirit.h" />
     <ClInclude Include="..\src\plankton\PlanktonGame.h" />
