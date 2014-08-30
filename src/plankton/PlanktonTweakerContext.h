@@ -1,8 +1,8 @@
 /**
  * Copyright (C) 2014 The Motel On Jupiter
  */
-#ifndef MALLTWEAKERCONTEXT_H_
-#define MALLTWEAKERCONTEXT_H_
+#ifndef PLANKTON_TWEAKER_CONTEXT_H_
+#define PLANKTON_TWEAKER_CONTEXT_H_
 
 struct PlanktonTweakerContext {
   int system_actual_fps;
@@ -14,4 +14,4 @@ struct PlanktonTweakerContext {
 
 extern PlanktonTweakerContext tweaker_ctx;
 
-#endif /* MALLTWEAKERCONTEXT_H_ */
+#endif /* PLANKTON_TWEAKER_CONTEXT_H_ */

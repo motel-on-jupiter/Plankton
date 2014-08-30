@@ -2,8 +2,8 @@
  * Copyright (C) 2014 The Motel on Jupiter
  */
 
-#ifndef MALLGAME_H_
-#define MALLGAME_H_
+#ifndef PLANKTON_GAME_H_
+#define PLANKTON_GAME_H_
 
 #include <vector>
 #include <SDL_ttf.h>
@@ -42,4 +42,4 @@ class PlanktonGame {
   TTF_Font *font_;
 };
 
-#endif /* MALLGAME_H_ */
+#endif /* PLANKTON_GAME_H_ */
