@@ -10,46 +10,37 @@
 #include "util/macro_util.h"
 #include "util/math_aux.h"
 
-const GLfloat BaseSpirit::kSpecularColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
-const GLfloat BaseSpirit::kShininess = 1.0f;
+BaseSpirit::BaseSpirit(const glm::vec3& pos, const glm::vec3 &color)
+: BaseEntity(pos, 0.0f, glm::vec3(2.0f)),
+  SphereEntityDraw(*this, color, X11Color::to_fvec(X11Color::kWhite), 1.0f, 30,
+                   30),
+  quadric_(nullptr) {
+}
 
 int BaseSpirit::Initialize() {
-  set_pos(glm::vec3(0.0f, 5.0f, 0.0f));
-
-  quadric_ = gluNewQuadric();
-  if (quadric_ == nullptr) {
-    LOGGER.Error("Failed to create quadric object");
-    return -1;
-  }
-  return 0;
+  return SphereEntityDraw::Initialize();
 }
 
 void BaseSpirit::Finalize() {
-  gluDeleteQuadric(quadric_);
-  quadric_ = nullptr;
+  SphereEntityDraw::Finalize();
 }
 
-void BaseSpirit::Draw() {
-  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, glm::value_ptr(color_));
-  glMaterialfv(GL_FRONT, GL_SPECULAR, kSpecularColor);
-  glMaterialfv(GL_FRONT, GL_SHININESS, &kShininess);
-
-  glPushMatrix();
-  glMultMatrixf(glm::value_ptr(glm::translate(pos())));
-  gluSphere(quadric_, 1.0, 30, 30);
-  glPopMatrix();
+RandomSpirit::RandomSpirit(const glm::vec3& pos, const glm::vec3 &color, float step)
+: BaseSpirit(pos, color), step_(step), start_(pos), goal_(), time_(0.0f) {
 }
 
 void RandomSpirit::Update(float elapsed_time) {
-  if (is_fzero(glm::distance(pos(), goal_))) {
+  while (time_ > 1.0f) {
+    start_ = goal_;
     goal_ = glm::linearRand(glm::vec3(-10.0f), glm::vec3(10.0f));
+    time_ -= 1.0f;
   }
-  float dist = std::min(glm::distance(pos(), goal_), speed_ * elapsed_time);
-  set_pos(pos() + glm::normalize(goal_ - pos()) * dist);
+  set_pos(glm::lerp(start_, goal_, time_));
+  time_ += step_ * elapsed_time;
 }
 
-HermiteSpirit::HermiteSpirit(const glm::vec3 &color, float step)
-: BaseSpirit(color), vs_(), ts_(), time_(0.0f), step_(step) {
+HermiteSpirit::HermiteSpirit(const glm::vec3& pos, const glm::vec3 &color, float step)
+: BaseSpirit(pos, color), step_(step), vs_(), ts_(), time_(0.0f) {
   for (int i=0; i<2; ++i) {
     vs_[i] = glm::linearRand(glm::vec3(-10.0f), glm::vec3(10.0f));
     ts_[i] = glm::sphericalRand(1.0f);
@@ -68,8 +59,8 @@ void HermiteSpirit::Update(float elapsed_time) {
   time_ += step_ * elapsed_time;
 }
 
-CatmullRomSpirit::CatmullRomSpirit(const glm::vec3 &color, float step)
-: BaseSpirit(color), targets_(), time_(0.0f), step_(step) {
+CatmullRomSpirit::CatmullRomSpirit(const glm::vec3 &pos, const glm::vec3 &color, float step)
+: BaseSpirit(pos, color), step_(step), targets_(), time_(0.0f) {
   for (int i=0; i<4; ++i) {
     targets_[i] = glm::linearRand(glm::vec3(-10.0f), glm::vec3(10.0f));
   }
@@ -110,7 +101,8 @@ int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
   }
 
   // Initialize spirit object
-  BaseSpirit *spirit = new RandomSpirit(X11Color::to_fvec(X11Color::kGray), 50.0f);
+  BaseSpirit *spirit = new RandomSpirit(glm::vec3(0.0f, 5.0f, 0.0f), X11Color::to_fvec(X11Color::kGray),
+                                        1.0f);
   if (spirit == nullptr) {
     LOGGER.Error("Failed to create the random spirit object");
     return -1;
@@ -121,7 +113,8 @@ int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
     return -1;
   }
   spirits_.push_back(spirit);
-  spirit = new CatmullRomSpirit(X11Color::to_fvec(X11Color::kGreen), 1.0f);
+  spirit = new CatmullRomSpirit(glm::vec3(0.0f, 5.0f, 0.0f), X11Color::to_fvec(X11Color::kGreen),
+                                1.0f);
   if (spirit == nullptr) {
     LOGGER.Error("Failed to create the catmull row spirit object");
     return -1;
@@ -132,7 +125,8 @@ int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
     return -1;
   }
   spirits_.push_back(spirit);
-  spirit = new HermiteSpirit(X11Color::to_fvec(X11Color::kOrange), 1.0f);
+  spirit = new HermiteSpirit(glm::vec3(0.0f, 5.0f, 0.0f), X11Color::to_fvec(X11Color::kOrange),
+                             1.0f);
   if (spirit == nullptr) {
     LOGGER.Error("Failed to create the hermite spirit object");
     return -1;

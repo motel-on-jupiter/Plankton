@@ -13,9 +13,11 @@ class BaseEntityDraw : public EntityMixIn {
   BaseEntityDraw(BaseEntity &entity) : EntityMixIn(entity) {}
   virtual ~BaseEntityDraw() {}
 
+  virtual void Draw() = 0;
+
+ protected:
   virtual int Initialize() = 0;
   virtual void Finalize() = 0;
-  virtual void Draw() = 0;
 };
 
 class SphereEntityDraw : public BaseEntityDraw {
@@ -26,9 +28,11 @@ class SphereEntityDraw : public BaseEntityDraw {
                    float shiness, int slices, int stacks);
   virtual ~SphereEntityDraw() {}
 
+  virtual void Draw();
+
+ protected:
   virtual int Initialize();
   virtual void Finalize();
-  virtual void Draw();
 
  private:
   GLUquadric *quadric_;

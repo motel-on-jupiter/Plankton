@@ -25,20 +25,6 @@ SphereEntityDraw::SphereEntityDraw(BaseEntity &entity, const glm::vec3 &ambient_
   colors_.push_back(specular);
 }
 
-int SphereEntityDraw::Initialize() {
-  quadric_ = gluNewQuadric();
-  if (quadric_ == nullptr) {
-    LOGGER.Error("Failed to create quadric object");
-    return -1;
-  }
-  return 0;
-}
-
-void SphereEntityDraw::Finalize() {
-  gluDeleteQuadric(quadric_);
-  quadric_ = nullptr;
-}
-
 void SphereEntityDraw::Draw() {
   if (colors_.size() == 2) {
     glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, glm::value_ptr(colors_[0]));
@@ -56,4 +42,18 @@ void SphereEntityDraw::Draw() {
   glMultMatrixf(glm::value_ptr(glm::translate(entity().pos())));
   gluSphere(quadric_, entity().scale().x * 0.5f, slices_, stacks_);
   glPopMatrix();
+}
+
+int SphereEntityDraw::Initialize() {
+  quadric_ = gluNewQuadric();
+  if (quadric_ == nullptr) {
+    LOGGER.Error("Failed to create quadric object");
+    return -1;
+  }
+  return 0;
+}
+
+void SphereEntityDraw::Finalize() {
+  gluDeleteQuadric(quadric_);
+  quadric_ = nullptr;
 }
