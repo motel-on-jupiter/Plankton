@@ -23,6 +23,7 @@
     <ClCompile Include="..\src\plankton\PlanktonTweakerContext.cc" />
     <ClCompile Include="..\src\plankton\scene\SpectrumWaveScene.cc" />
     <ClCompile Include="..\src\plankton\scene\SpiritFloatingScene.cc" />
+    <ClCompile Include="..\src\util\color_sample.cc" />
     <ClCompile Include="..\src\util\config\ini.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>

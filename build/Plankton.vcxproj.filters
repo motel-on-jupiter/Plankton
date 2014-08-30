@@ -123,6 +123,9 @@
     <ClCompile Include="..\src\plankton\scene\SpectrumWaveScene.cc">
       <Filter>src\plankton\scene</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\util\color_sample.cc">
+      <Filter>src\util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\util\logging\Logger.h">
