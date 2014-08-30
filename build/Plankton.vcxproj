@@ -23,7 +23,7 @@
     <ClCompile Include="..\src\plankton\PlanktonTweakerContext.cc" />
     <ClCompile Include="..\src\plankton\scene\SpectrumWaveScene.cc" />
     <ClCompile Include="..\src\plankton\scene\SpiritFloatingScene.cc" />
-    <ClCompile Include="..\src\util\color_sample.cc" />
+    <ClCompile Include="..\src\util\catalogue\color_sample.cc" />
     <ClCompile Include="..\src\util\config\ini.c">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -59,7 +59,7 @@
     <ClInclude Include="..\src\plankton\PlanktonTweakerContext.h" />
     <ClInclude Include="..\src\plankton\scene\SpectrumWaveScene.h" />
     <ClInclude Include="..\src\plankton\scene\SpiritFloatingScene.h" />
-    <ClInclude Include="..\src\util\color_sample.h" />
+    <ClInclude Include="..\src\util\catalogue\color_sample.h" />
     <ClInclude Include="..\src\util\config\ini.h" />
     <ClInclude Include="..\src\util\config\reader\GLINIReader.h" />
     <ClInclude Include="..\src\util\config\reader\INIReader.h" />

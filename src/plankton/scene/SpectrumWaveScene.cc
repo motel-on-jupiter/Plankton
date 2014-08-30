@@ -3,7 +3,7 @@
  */
 #include "SpectrumWaveScene.h"
 #include <boost/foreach.hpp>
-#include "util/color_sample.h"
+#include "util/catalogue/color_sample.h"
 #include "util/logging/Logger.h"
 #include "util/wrapper/glgraphics_wrap.h"
 #include "util/macro_util.h"

@@ -37,6 +37,9 @@
     <Filter Include="src\plankton\scene">
       <UniqueIdentifier>{884dc565-7247-4cf7-8b72-7ff831e3609a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\util\catalogue">
+      <UniqueIdentifier>{4a7ea003-d04b-4a16-ac2f-f66a4a0eb8a7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\util\logging\Logger.cc">
@@ -123,8 +126,8 @@
     <ClCompile Include="..\src\plankton\scene\SpectrumWaveScene.cc">
       <Filter>src\plankton\scene</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\util\color_sample.cc">
-      <Filter>src\util</Filter>
+    <ClCompile Include="..\src\util\catalogue\color_sample.cc">
+      <Filter>src\util\catalogue</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -227,11 +230,11 @@
     <ClInclude Include="..\src\plankton\scene\SpiritFloatingScene.h">
       <Filter>src\plankton\scene</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\util\color_sample.h">
-      <Filter>src\util</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\plankton\scene\SpectrumWaveScene.h">
       <Filter>src\plankton\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\util\catalogue\color_sample.h">
+      <Filter>src\util\catalogue</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
