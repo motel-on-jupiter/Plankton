@@ -43,6 +43,9 @@
     <Filter Include="src\plankton\actor">
       <UniqueIdentifier>{1e961ba6-6449-4d30-8b5b-27ec8334f7cc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\graphics">
+      <UniqueIdentifier>{f492d31e-f1ea-4eea-8ec6-e42ce345a799}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\util\logging\emitter\DebuggerConsoleLogEmitter.cc">
@@ -140,6 +143,9 @@
     </ClCompile>
     <ClCompile Include="..\src\plankton\actor\Spirit.cc">
       <Filter>src\plankton\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\graphics\Shader.cc">
+      <Filter>src\graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -253,6 +259,9 @@
     </ClInclude>
     <ClInclude Include="..\src\plankton\actor\Spirit.h">
       <Filter>src\plankton\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\graphics\Shader.h">
+      <Filter>src\graphics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
