@@ -6,7 +6,6 @@
 
 #include <cstdarg>
 #include <cstdio>
-#include <boost/static_assert.hpp>
 
 #include "util/logging/emitter/LogEmitter.h"
 
