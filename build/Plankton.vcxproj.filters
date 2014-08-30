@@ -129,6 +129,9 @@
     <ClCompile Include="..\src\util\catalogue\color_sample.cc">
       <Filter>src\util\catalogue</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\util\assert_util.cc">
+      <Filter>src\util</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\util\logging\Logger.h">
@@ -235,6 +238,9 @@
     </ClInclude>
     <ClInclude Include="..\src\util\catalogue\color_sample.h">
       <Filter>src\util\catalogue</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\util\assert_util.h">
+      <Filter>src\util</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

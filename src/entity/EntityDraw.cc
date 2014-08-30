@@ -5,6 +5,7 @@
 #include "entity/BaseEntity.h"
 #include "util/logging/Logger.h"
 #include "util/wrapper/glgraphics_wrap.h"
+#include "util/assert_util.h"
 
 SphereEntityDraw::SphereEntityDraw(BaseEntity &entity, const glm::vec3 &ambient,
                                    const glm::vec3 &difusse, const glm::vec3 &specular,
@@ -34,7 +35,7 @@ void SphereEntityDraw::Draw() {
     glMaterialfv(GL_FRONT, GL_DIFFUSE, glm::value_ptr(colors_[1]));
     glMaterialfv(GL_FRONT, GL_SPECULAR, glm::value_ptr(colors_[2]));
   } else {
-    assert(false);
+    assert_not_reached();
   }
   glMaterialfv(GL_FRONT, GL_SHININESS, &shiness_);
 
