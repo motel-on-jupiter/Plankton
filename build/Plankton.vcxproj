@@ -80,6 +80,9 @@
     <ClInclude Include="..\src\util\wrapper\glm_wrap.h" />
     <ClInclude Include="..\src\util\wrapper\sdl_wrap.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\util\logging\Logger.inl" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{1AA04D48-AD99-4B2A-8058-B840FC91770A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>

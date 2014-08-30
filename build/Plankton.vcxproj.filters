@@ -42,9 +42,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\util\logging\Logger.cc">
-      <Filter>src\util\logging</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\util\logging\emitter\DebuggerConsoleLogEmitter.cc">
       <Filter>src\util\logging\emitter</Filter>
     </ClCompile>
@@ -131,6 +128,9 @@
     </ClCompile>
     <ClCompile Include="..\src\util\assert_util.cc">
       <Filter>src\util</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\util\logging\Logger.cc">
+      <Filter>src\util\logging</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -242,5 +242,10 @@
     <ClInclude Include="..\src\util\assert_util.h">
       <Filter>src\util</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\src\util\logging\Logger.inl">
+      <Filter>src\util\logging</Filter>
+    </None>
   </ItemGroup>
 </Project>

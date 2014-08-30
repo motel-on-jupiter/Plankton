@@ -20,8 +20,8 @@ int main(int argc, char **argv) {
 #endif
 
   // Set up logger
-  LOGGER.PushEmitter(&DEBUGGER_CONSOLE_LOG_EMITTER);
-  LOGGER.PushEmitter(&STDERR_LOG_EMITTER);
+  LOGGER.PushEmitter(DEBUGGER_CONSOLE_LOG_EMITTER);
+  LOGGER.PushEmitter(STDERR_LOG_EMITTER);
 
   // Load the configuration on the external file
   if (argc != 2) {

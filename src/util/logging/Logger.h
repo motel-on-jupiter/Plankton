@@ -29,40 +29,35 @@ class Logger : public boost::serialization::singleton<Logger> {
   Logger();
   virtual ~Logger();
 
-  // メッセージ出力
-  void Emit(const char *format, ...);
-  void Emitv(const char *format, va_list args);
-  void Emit(Level level, const char *format, ...);
-  void Emitv(Level level, const char *format, va_list args);
+  inline void Emit(const char *format, ...);
+  inline void Emitv(const char *format, va_list args);
+  inline void Emit(Level level, const char *format, ...);
+  inline void Emitv(Level level, const char *format, va_list args);
 
-  void Trace(const char *format, ...);
-  void Tracev(const char *format, va_list args);
-  void Debug(const char *format, ...);
-  void Debugv(const char *format, va_list args);
-  void Info(const char *format, ...);
-  void Infov(const char *format, va_list args);
-  void Notice(const char *format, ...);
-  void Noticev(const char *format, va_list args);
-  void Warn(const char *format, ...);
-  void Warnv(const char *format, va_list args);
-  void Error(const char *format, ...);
-  void Errorv(const char *format, va_list args);
-  void Crit(const char *format, ...);
-  void Critv(const char *format, va_list args);
+  inline void Trace(const char *format, ...);
+  inline void Tracev(const char *format, va_list args);
+  inline void Debug(const char *format, ...);
+  inline void Debugv(const char *format, va_list args);
+  inline void Info(const char *format, ...);
+  inline void Infov(const char *format, va_list args);
+  inline void Notice(const char *format, ...);
+  inline void Noticev(const char *format, va_list args);
+  inline void Warn(const char *format, ...);
+  inline void Warnv(const char *format, va_list args);
+  inline void Error(const char *format, ...);
+  inline void Errorv(const char *format, va_list args);
+  inline void Crit(const char *format, ...);
+  inline void Critv(const char *format, va_list args);
 
-  void PushEmitter(LogEmitter *emitter) {
-    if (NULL != emitter) {
-      emitters_.push_back(emitter);
-    }
-  }
-  void ClearEmitters() {
-    emitters_.clear();
-  }
+  inline void PushEmitter(LogEmitter &emitter);
+  inline void ClearEmitters();
 
  private:
   static const char *kLogPrefixes[kNumLogLevels];
 
   std::vector<LogEmitter *> emitters_;
 };
+
+#include "Logger.inl"
 
 #endif /* LOGGER_H_ */
