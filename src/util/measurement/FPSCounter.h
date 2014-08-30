@@ -7,12 +7,17 @@
 class FPSCounter {
  public:
   FPSCounter(int sampling_msec);
-  ~FPSCounter() {}
+  ~FPSCounter() {
+  }
 
   void Update(int current_msec);
 
-  int sampling_msec() const { return sampling_msec_; }
-  int fps() const { return fps_; }
+  int sampling_msec() const {
+    return sampling_msec_;
+  }
+  int fps() const {
+    return fps_;
+  }
 
  private:
   int sampling_msec_;

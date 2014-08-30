@@ -10,8 +10,11 @@
 
 class BaseEntityDraw : public EntityMixIn {
  public:
-  BaseEntityDraw(BaseEntity &entity) : EntityMixIn(entity) {}
-  virtual ~BaseEntityDraw() {}
+  BaseEntityDraw(BaseEntity &entity)
+      : EntityMixIn(entity) {
+  }
+  virtual ~BaseEntityDraw() {
+  }
 
   virtual void Draw() = 0;
 
@@ -22,11 +25,14 @@ class BaseEntityDraw : public EntityMixIn {
 
 class SphereEntityDraw : public BaseEntityDraw {
  public:
-  SphereEntityDraw(BaseEntity &entity, const glm::vec3 &ambient, const glm::vec3 &difusse,
-                   const glm::vec3 &specular, float shiness, int slices, int stacks);
-  SphereEntityDraw(BaseEntity &entity, const glm::vec3 &ambient_and_difusse, const glm::vec3 &specular,
+  SphereEntityDraw(BaseEntity &entity, const glm::vec3 &ambient,
+                   const glm::vec3 &difusse, const glm::vec3 &specular,
                    float shiness, int slices, int stacks);
-  virtual ~SphereEntityDraw() {}
+  SphereEntityDraw(BaseEntity &entity, const glm::vec3 &ambient_and_difusse,
+                   const glm::vec3 &specular, float shiness, int slices,
+                   int stacks);
+  virtual ~SphereEntityDraw() {
+  }
 
   virtual void Draw();
 

@@ -12,7 +12,8 @@
 const size_t SpectrumWaveScene::kNumBars = 100;
 
 SpectrumWaveScene::SpectrumWaveScene()
-: initialize_(false), remain_time_(FLT_MAX) {
+    : initialize_(false),
+      remain_time_(FLT_MAX) {
 }
 
 int SpectrumWaveScene::Initialize(const glm::vec2 &window_size) {
@@ -38,14 +39,15 @@ void SpectrumWaveScene::Finalize() {
   initialize_ = false;
 }
 
-void SpectrumWaveScene::Update(float elapsed_time, const glm::vec2 &window_size) {
+void SpectrumWaveScene::Update(float elapsed_time,
+                               const glm::vec2 &window_size) {
   if (!initialize_) {
     return;
   }
 
   if (remain_time_ > 0.1f) {
     bar_lengths_.clear();
-    for (size_t i=0; i<kNumBars; ++i) {
+    for (size_t i = 0; i < kNumBars; ++i) {
       bar_lengths_.push_back(glm::linearRand(0.0f, window_size.y));
     }
     remain_time_ = 0.0f;

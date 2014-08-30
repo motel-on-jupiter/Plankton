@@ -7,19 +7,19 @@
 
 EntityRouting::EntityRouting(BaseEntity &entity, const WaypointGraph &graph,
                              const Waypoint &origin, const Waypoint &terminus,
-                             float speed, float turnspeed) :
-  EntityMixIn(entity),
-  navi_(graph),
-  goal_(nullptr),
-  lastgoal_(&origin),
-  movespeed_(speed),
-  turnspeed_(turnspeed) {
+                             float speed, float turnspeed)
+    : EntityMixIn(entity),
+      navi_(graph),
+      goal_(nullptr),
+      lastgoal_(&origin),
+      movespeed_(speed),
+      turnspeed_(turnspeed) {
   navi_.Reroute(origin, terminus);
 }
 
 void EntityRouting::Update(float elapsed_time) {
-  if ((goal_ != nullptr) &&
-      (is_fzero(glm::distance(entity().pos(), goal_->pos())))) {
+  if ((goal_ != nullptr)
+      && (is_fzero(glm::distance(entity().pos(), goal_->pos())))) {
     entity().set_pos(goal_->pos());
     lastgoal_ = goal_;
     goal_ = nullptr;
@@ -37,20 +37,23 @@ void EntityRouting::Update(float elapsed_time) {
   } else {
     glm::vec2 movevec = goal_->pos() - entity().pos();
     glm::vec2 movedir = glm::normalize(movevec);
-    float movedirangle = normalize_angle(atan2(movedir.y, movedir.x) +
-                                         glm::radians(90.0f));
+    float movedirangle = normalize_angle(
+        atan2(movedir.y, movedir.x) + glm::radians(90.0f));
     float diffangle = normalize_angle(movedirangle - entity().rot());
     if (is_fzero(diffangle)) {
-      float movedist = std::min(movespeed_ * elapsed_time, glm::length(movevec));
+      float movedist = std::min(movespeed_ * elapsed_time,
+                                glm::length(movevec));
       entity().set_pos(entity().pos() + movedir * movedist);
     } else {
       float invdiffangle = normalize_angle(entity().rot() - movedirangle);
       if (abs(diffangle) > abs(invdiffangle)) {
         diffangle = invdiffangle;
       }
-      entity().set_rot(normalize_angle(entity().rot() +
-                                       std::min<float>(turnspeed_, abs(diffangle)) *
-                                       sign_f(diffangle)));
+      entity().set_rot(
+          normalize_angle(
+              entity().rot()
+                  + std::min<float>(turnspeed_, abs(diffangle))
+                      * sign_f(diffangle)));
     }
   }
 }

@@ -10,13 +10,15 @@
 class SpectrumWaveScene : public PlanktonGameSceneInterface {
  public:
   SpectrumWaveScene();
-  virtual ~SpectrumWaveScene() {}
+  virtual ~SpectrumWaveScene() {
+  }
 
   virtual int Initialize(const glm::vec2 &window_size);
   virtual void Finalize();
   virtual void Update(float elapsed_time, const glm::vec2 &window_size);
   virtual void Draw(const glm::vec2 &window_size);
-  virtual int OnMouseButtonDown(unsigned char button, const glm::vec2 &cursor_pos);
+  virtual int OnMouseButtonDown(unsigned char button,
+                                const glm::vec2 &cursor_pos);
 
  private:
   static const size_t kNumBars;

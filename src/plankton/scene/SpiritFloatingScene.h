@@ -12,7 +12,8 @@
 class BaseSpirit : public BaseEntity, public SphereEntityDraw {
  public:
   BaseSpirit(const glm::vec3& pos, const glm::vec3 &color);
-  virtual ~BaseSpirit() {}
+  virtual ~BaseSpirit() {
+  }
 
   virtual int Initialize();
   virtual void Finalize();
@@ -25,7 +26,8 @@ class BaseSpirit : public BaseEntity, public SphereEntityDraw {
 class RandomSpirit : public BaseSpirit {
  public:
   RandomSpirit(const glm::vec3& pos, const glm::vec3 &color, float step);
-  virtual ~RandomSpirit() {}
+  virtual ~RandomSpirit() {
+  }
 
   virtual void Update(float elapsed_time);
 
@@ -39,7 +41,8 @@ class RandomSpirit : public BaseSpirit {
 class CatmullRomSpirit : public BaseSpirit {
  public:
   CatmullRomSpirit(const glm::vec3& pos, const glm::vec3 &color, float step);
-  virtual ~CatmullRomSpirit() {}
+  virtual ~CatmullRomSpirit() {
+  }
 
   virtual void Update(float elapsed_time);
 
@@ -52,7 +55,8 @@ class CatmullRomSpirit : public BaseSpirit {
 class HermiteSpirit : public BaseSpirit {
  public:
   HermiteSpirit(const glm::vec3& pos, const glm::vec3 &color, float step);
-  virtual ~HermiteSpirit() {}
+  virtual ~HermiteSpirit() {
+  }
 
   virtual void Update(float elapsed_time);
 
@@ -66,13 +70,15 @@ class HermiteSpirit : public BaseSpirit {
 class SpiritFloatingScene : public PlanktonGameSceneInterface {
  public:
   SpiritFloatingScene();
-  virtual ~SpiritFloatingScene() {}
+  virtual ~SpiritFloatingScene() {
+  }
 
   virtual int Initialize(const glm::vec2 &window_size);
   virtual void Finalize();
   virtual void Update(float elapsed_time, const glm::vec2 &window_size);
   virtual void Draw(const glm::vec2 &window_size);
-  virtual int OnMouseButtonDown(unsigned char button, const glm::vec2 &cursor_pos);
+  virtual int OnMouseButtonDown(unsigned char button,
+                                const glm::vec2 &cursor_pos);
 
  private:
   static const float kPerspectiveFovy;

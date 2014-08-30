@@ -33,7 +33,7 @@ extern "C" {
 int ini_parse(
     const char* filename,
     int (*handler)(void* user, const char* section, const char* name,
-                   const char* value),
+        const char* value),
     void* user);
 
 /* Same as ini_parse(), but takes a FILE* instead of filename. This doesn't
@@ -41,7 +41,7 @@ int ini_parse(
 int ini_parse_file(
     FILE* file,
     int (*handler)(void* user, const char* section, const char* name,
-                   const char* value),
+        const char* value),
     void* user);
 
 /* Nonzero to allow multi-line value parsing, in the style of Python's

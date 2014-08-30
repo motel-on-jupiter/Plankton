@@ -4,8 +4,7 @@
 #include <SDL_ttf.h>
 
 int RenderTTFText(TTF_Font *Font, const SDL_Color& Color,
-                  const glm::vec2 &Position,  const char *Text)
-{
+                  const glm::vec2 &Position, const char *Text) {
   /*Create some variables.*/
   SDL_Surface *Message = TTF_RenderText_Blended(Font, Text, Color);
   if (Message == nullptr) {
@@ -22,10 +21,10 @@ int RenderTTFText(TTF_Font *Font, const SDL_Color& Color,
                GL_UNSIGNED_BYTE, Message->pixels);
 
   /*Draw this texture on a quad with the given xyz coordinates.*/
-  glEnable(GL_TEXTURE_2D);
-  glEnable(GL_BLEND);
+  glEnable (GL_TEXTURE_2D);
+  glEnable (GL_BLEND);
   glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-  glBegin(GL_QUADS);
+  glBegin (GL_QUADS);
 
   glTexCoord2f(0.0f, 0.0f);
   glVertex2fv(glm::value_ptr(Position));

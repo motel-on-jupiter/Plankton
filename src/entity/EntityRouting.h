@@ -7,23 +7,36 @@
 #include "entity/BaseEntity.h"
 
 class EntityRouting : public EntityMixIn {
-public:
+ public:
   EntityRouting(BaseEntity &entity, const WaypointGraph &graph,
                 const Waypoint &origin, const Waypoint &terminus,
                 float movespeed, float turnspeed);
-  ~EntityRouting() {}
+  ~EntityRouting() {
+  }
 
   void Update(float elapsed_time);
   void Reroute(const Waypoint &terminus);
-  bool HasReached() const { return goal_ == nullptr; }
+  bool HasReached() const {
+    return goal_ == nullptr;
+  }
 
-  Navigator &navi() { return navi_; }
-  float movespeed() const { return movespeed_; }
-  float turnspeed() const { return turnspeed_; }
-  const Waypoint *goal() const { return goal_; }
-  const Waypoint *lastgoal() const { return lastgoal_; }
+  Navigator &navi() {
+    return navi_;
+  }
+  float movespeed() const {
+    return movespeed_;
+  }
+  float turnspeed() const {
+    return turnspeed_;
+  }
+  const Waypoint *goal() const {
+    return goal_;
+  }
+  const Waypoint *lastgoal() const {
+    return lastgoal_;
+  }
 
-private:
+ private:
   Navigator navi_;
   const Waypoint *goal_;
   const Waypoint *lastgoal_;

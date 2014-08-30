@@ -45,7 +45,8 @@ int PlanktonMain(int argc, char *argv[], const char *config_path) {
 
   // Initialize SDL
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    LOGGER.Error("Failed to initialize SDL video system (errmsg: %s)", SDL_GetError());
+    LOGGER.Error("Failed to initialize SDL video system (errmsg: %s)",
+                 SDL_GetError());
     return -1;
   }
 
@@ -61,8 +62,8 @@ int PlanktonMain(int argc, char *argv[], const char *config_path) {
 
   // Create the window
   window = SDL_CreateWindow(kWindowCaption.c_str(), SDL_WINDOWPOS_CENTERED,
-                            SDL_WINDOWPOS_CENTERED, kWindowWidth, kWindowHeight,
-                            SDL_WINDOW_OPENGL);
+  SDL_WINDOWPOS_CENTERED,
+                            kWindowWidth, kWindowHeight, SDL_WINDOW_OPENGL);
   if (window == nullptr) {
     LOGGER.Error("Failed to create SDL window (errmsg: %s)", SDL_GetError());
     PlanktonCleanUp();
@@ -72,36 +73,42 @@ int PlanktonMain(int argc, char *argv[], const char *config_path) {
   // Create OpenGL context
   context = SDL_GL_CreateContext(window);
   if (context == nullptr) {
-    LOGGER.Error("Failed to create SDL context for OpenGL (errmsg: %s)", SDL_GetError());
+    LOGGER.Error("Failed to create SDL context for OpenGL (errmsg: %s)",
+                 SDL_GetError());
     PlanktonCleanUp();
     return -1;
   }
 
   // Initialize the tweaker library
   if (TwInit(TW_OPENGL, NULL) == 0) {
-    LOGGER.Error("Failed to initialize the tweaker library (errmsg: %s)", TwGetLastError());
+    LOGGER.Error("Failed to initialize the tweaker library (errmsg: %s)",
+                 TwGetLastError());
     PlanktonCleanUp();
     return -1;
   }
   if (TwWindowSize(kWindowWidth, kWindowHeight) == 0) {
-    LOGGER.Error("Failed to set the window size to tweaker (errmsg: %s)", TwGetLastError());
+    LOGGER.Error("Failed to set the window size to tweaker (errmsg: %s)",
+                 TwGetLastError());
     PlanktonCleanUp();
     return -1;
   }
   tw_bar = TwNewBar("TweakMenu");
   std::stringstream tw_def;
-  tw_def << "TweakMenu position='" << 550 << " " << 10 <<
-      "' size='" << 240 << " " << 580 << "' color='41 126 231' iconified=true";
+  tw_def << "TweakMenu position='" << 550 << " " << 10 << "' size='" << 240
+         << " " << 580 << "' color='41 126 231' iconified=true";
   TwDefine(tw_def.str().c_str());
   if (TwAddVarRO(tw_bar, "SYSTEM_ACTUAL_FRAME_RATE", TW_TYPE_INT8,
                  &(tweaker_ctx.system_actual_fps),
                  "group='System' label='Actual Frame Rate'") == 0) {
-    LOGGER.Warn("Failed to add a tweak variable for actual-FPS (errmsg: %s)", TwGetLastError());
+    LOGGER.Warn("Failed to add a tweak variable for actual-FPS (errmsg: %s)",
+                TwGetLastError());
   }
-  if (TwAddVarRW(tw_bar, "SYSTEM_TIME_SPEED", TW_TYPE_FLOAT,
-                 &(tweaker_ctx.system_time_speed),
-                 "group='System' label='Time Speed' min='0' max='30' step='0.5'") == 0) {
-    LOGGER.Warn("Failed to add a tweak variable for time-speed (errmsg: %s)", TwGetLastError());
+  if (TwAddVarRW(
+      tw_bar, "SYSTEM_TIME_SPEED", TW_TYPE_FLOAT,
+      &(tweaker_ctx.system_time_speed),
+      "group='System' label='Time Speed' min='0' max='30' step='0.5'") == 0) {
+    LOGGER.Warn("Failed to add a tweak variable for time-speed (errmsg: %s)",
+                TwGetLastError());
   }
 
   // Initialize the game
@@ -139,8 +146,8 @@ int PlanktonMain(int argc, char *argv[], const char *config_path) {
           }
           break;
         case SDL_MOUSEBUTTONDOWN:
-          game.OnMouseButtonDown(event.button.button, event.button.x, event.button.y,
-                                 kWindowSize);
+          game.OnMouseButtonDown(event.button.button, event.button.x,
+                                 event.button.y, kWindowSize);
           break;
       }
     }
@@ -149,7 +156,8 @@ int PlanktonMain(int argc, char *argv[], const char *config_path) {
     }
 
     // Update the game
-    game.Update(kGameLoopIntervalSec * tweaker_ctx.system_time_speed, kWindowSize);
+    game.Update(kGameLoopIntervalSec * tweaker_ctx.system_time_speed,
+                kWindowSize);
 
     // Draw the objects
     game.Draw(kWindowSize);

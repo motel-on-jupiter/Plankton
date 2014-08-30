@@ -8,20 +8,30 @@
 #include "util/assert_util.h"
 
 SphereEntityDraw::SphereEntityDraw(BaseEntity &entity, const glm::vec3 &ambient,
-                                   const glm::vec3 &difusse, const glm::vec3 &specular,
-                                   float shiness, int slices, int stacks)
-: BaseEntityDraw(entity), quadric_(nullptr), colors_(), shiness_(shiness), slices_(slices),
-  stacks_(stacks) {
+                                   const glm::vec3 &difusse,
+                                   const glm::vec3 &specular, float shiness,
+                                   int slices, int stacks)
+    : BaseEntityDraw(entity),
+      quadric_(nullptr),
+      colors_(),
+      shiness_(shiness),
+      slices_(slices),
+      stacks_(stacks) {
   colors_.push_back(ambient);
   colors_.push_back(difusse);
   colors_.push_back(specular);
 }
 
-SphereEntityDraw::SphereEntityDraw(BaseEntity &entity, const glm::vec3 &ambient_and_difusse,
-                                   const glm::vec3 &specular, float shiness, int slices,
-                                   int stacks)
-: BaseEntityDraw(entity), quadric_(nullptr), colors_(), shiness_(shiness), slices_(slices),
-  stacks_(stacks) {
+SphereEntityDraw::SphereEntityDraw(BaseEntity &entity,
+                                   const glm::vec3 &ambient_and_difusse,
+                                   const glm::vec3 &specular, float shiness,
+                                   int slices, int stacks)
+    : BaseEntityDraw(entity),
+      quadric_(nullptr),
+      colors_(),
+      shiness_(shiness),
+      slices_(slices),
+      stacks_(stacks) {
   colors_.push_back(ambient_and_difusse);
   colors_.push_back(specular);
 }
