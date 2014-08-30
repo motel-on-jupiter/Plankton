@@ -10,7 +10,7 @@
 
 class BaseSpirit : public BaseEntity {
  public:
-  BaseSpirit() : BaseEntity(), quadric_(nullptr) {}
+  BaseSpirit(const glm::vec3 &color) : BaseEntity(), quadric_(nullptr), color_(color) {}
   virtual ~BaseSpirit() {}
 
   virtual int Initialize();
@@ -19,17 +19,16 @@ class BaseSpirit : public BaseEntity {
   virtual void Draw();
 
  private:
-  static const GLfloat kAmbientColor[];
-  static const GLfloat kDiffuseColor[];
   static const GLfloat kSpecularColor[];
   static const GLfloat kShininess;
 
   GLUquadric *quadric_;
+  glm::vec3 color_;
 };
 
 class RandomSpirit : public BaseSpirit {
  public:
-  RandomSpirit() : BaseSpirit(), goal_(), speed_(50.0f) {}
+  RandomSpirit(const glm::vec3 &color) : BaseSpirit(color), goal_(), speed_(50.0f) {}
   virtual ~RandomSpirit() {}
 
   virtual void Update(float elapsed_time);
@@ -41,7 +40,7 @@ class RandomSpirit : public BaseSpirit {
 
 class CatmullRomSpirit : public BaseSpirit {
  public:
-  CatmullRomSpirit();
+  CatmullRomSpirit(const glm::vec3 &color);
   virtual ~CatmullRomSpirit() {}
 
   virtual void Update(float elapsed_time);
@@ -53,7 +52,7 @@ class CatmullRomSpirit : public BaseSpirit {
 
 class HermiteSpirit : public BaseSpirit {
  public:
-  HermiteSpirit();
+  HermiteSpirit(const glm::vec3 &color);
   virtual ~HermiteSpirit() {}
 
   virtual void Update(float elapsed_time);

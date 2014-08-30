@@ -6,11 +6,10 @@
 #include <boost/foreach.hpp>
 #include "util/logging/Logger.h"
 #include "util/wrapper/glgraphics_wrap.h"
+#include "util/color_sample.h"
 #include "util/macro_util.h"
 #include "util/math_aux.h"
 
-const GLfloat BaseSpirit::kAmbientColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
-const GLfloat BaseSpirit::kDiffuseColor[] = {0.1f, 0.1f, 0.1f, 1.0f};
 const GLfloat BaseSpirit::kSpecularColor[] = {1.0f, 1.0f, 1.0f, 1.0f};
 const GLfloat BaseSpirit::kShininess = 1.0f;
 
@@ -31,8 +30,7 @@ void BaseSpirit::Finalize() {
 }
 
 void BaseSpirit::Draw() {
-  glMaterialfv(GL_FRONT, GL_AMBIENT, kAmbientColor);
-  glMaterialfv(GL_FRONT, GL_DIFFUSE, kDiffuseColor);
+  glMaterialfv(GL_FRONT, GL_AMBIENT_AND_DIFFUSE, glm::value_ptr(color_));
   glMaterialfv(GL_FRONT, GL_SPECULAR, kSpecularColor);
   glMaterialfv(GL_FRONT, GL_SHININESS, &kShininess);
 
@@ -50,8 +48,8 @@ void RandomSpirit::Update(float elapsed_time) {
   set_pos(pos() + glm::normalize(goal_ - pos()) * dist);
 }
 
-HermiteSpirit::HermiteSpirit()
-: BaseSpirit(), vs_(), ts_(), time_(0.0f) {
+HermiteSpirit::HermiteSpirit(const glm::vec3 &color)
+: BaseSpirit(color), vs_(), ts_(), time_(0.0f) {
   for (int i=0; i<2; ++i) {
     vs_[i] = glm::linearRand(glm::vec3(-10.0f), glm::vec3(10.0f));
     ts_[i] = glm::sphericalRand(1.0f);
@@ -70,8 +68,8 @@ void HermiteSpirit::Update(float elapsed_time) {
   time_ += elapsed_time;
 }
 
-CatmullRomSpirit::CatmullRomSpirit()
-: BaseSpirit(), targets_(), time_(0.0f) {
+CatmullRomSpirit::CatmullRomSpirit(const glm::vec3 &color)
+: BaseSpirit(color), targets_(), time_(0.0f) {
   for (int i=0; i<4; ++i) {
     targets_[i] = glm::linearRand(glm::vec3(-10.0f), glm::vec3(10.0f));
   }
@@ -112,7 +110,7 @@ int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
   }
 
   // Initialize spirit object
-  BaseSpirit *spirit = new RandomSpirit();
+  BaseSpirit *spirit = new RandomSpirit(X11Color::to_fvec(X11Color::kGray));
   if (spirit == nullptr) {
     LOGGER.Error("Failed to create the random spirit object");
     return -1;
@@ -123,7 +121,7 @@ int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
     return -1;
   }
   spirits_.push_back(spirit);
-  spirit = new CatmullRomSpirit();
+  spirit = new CatmullRomSpirit(X11Color::to_fvec(X11Color::kGreen));
   if (spirit == nullptr) {
     LOGGER.Error("Failed to create the catmull row spirit object");
     return -1;
@@ -134,7 +132,7 @@ int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
     return -1;
   }
   spirits_.push_back(spirit);
-  spirit = new HermiteSpirit();
+  spirit = new HermiteSpirit(X11Color::to_fvec(X11Color::kOrange));
   if (spirit == nullptr) {
     LOGGER.Error("Failed to create the hermite spirit object");
     return -1;
