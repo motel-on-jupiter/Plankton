@@ -8,6 +8,32 @@
 #include "plankton/actor/Spirit.h"
 #include "plankton/PlanktonGame.h"
 
+class SpiritFloatingSceneRenderer {
+ public:
+  SpiritFloatingSceneRenderer();
+  ~SpiritFloatingSceneRenderer();
+
+  int Initialize(const glm::vec2 &window_size);
+  void Finalize();
+
+  void Begin();
+  void End();
+
+ private:
+  static const float kPerspectiveFovy;
+  static const float kPerspectiveNear;
+  static const float kPerspectiveFar;
+  static const GLfloat kLightPosition[];
+  static const GLfloat kLightAmbientColor[];
+  static const GLfloat kLightDiffuseColor[];
+  static const GLfloat kLightSpecularColor[];
+  static const glm::mat4 kViewMatrix;
+
+  bool initialized_;
+  std::vector<GLuint> shaders_;
+  GLuint shader_program_;
+};
+
 class SpiritFloatingScene : public PlanktonGameSceneInterface {
  public:
   SpiritFloatingScene();
@@ -22,18 +48,8 @@ class SpiritFloatingScene : public PlanktonGameSceneInterface {
                                 const glm::vec2 &cursor_pos);
 
  private:
-  static const float kPerspectiveFovy;
-  static const float kPerspectiveNear;
-  static const float kPerspectiveFar;
-  static const GLfloat kLightPosition[];
-  static const GLfloat kLightAmbientColor[];
-  static const GLfloat kLightDiffuseColor[];
-  static const GLfloat kLightSpecularColor[];
-  static const glm::mat4 kViewMatrix;
-
   bool initialize_;
   std::vector<BaseSpirit *> spirits_;
-  std::vector<GLuint> shaders_;
-  GLuint shader_program_;
+  SpiritFloatingSceneRenderer renderer_;
 };
 #endif /* SPIRITFLOATINGSCENE_H_ */

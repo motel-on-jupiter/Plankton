@@ -11,76 +11,38 @@
 #include "util/macro_util.h"
 #include "util/math_aux.h"
 
-const float SpiritFloatingScene::kPerspectiveFovy = glm::radians(45.0f);
-const float SpiritFloatingScene::kPerspectiveNear = 2.0f;
-const float SpiritFloatingScene::kPerspectiveFar = 200.0f;
+const float SpiritFloatingSceneRenderer::kPerspectiveFovy = glm::radians(45.0f);
+const float SpiritFloatingSceneRenderer::kPerspectiveNear = 2.0f;
+const float SpiritFloatingSceneRenderer::kPerspectiveFar = 200.0f;
 
-const GLfloat SpiritFloatingScene::kLightPosition[] = { 0.0f, 10.0f, -10.0f,
-    1.0f };
-const GLfloat SpiritFloatingScene::kLightAmbientColor[] = { 1.0f, 1.0f, 1.0f,
-    1.0f };
-const GLfloat SpiritFloatingScene::kLightDiffuseColor[] = { 1.0f, 1.0f, 1.0f,
-    1.0f };
-const GLfloat SpiritFloatingScene::kLightSpecularColor[] = { 0.1f, 0.1f, 0.1f,
-    1.0f };
+const GLfloat SpiritFloatingSceneRenderer::kLightPosition[] = { 0.0f, 10.0f,
+    -10.0f, 1.0f };
+const GLfloat SpiritFloatingSceneRenderer::kLightAmbientColor[] = { 1.0f, 1.0f,
+    1.0f, 1.0f };
+const GLfloat SpiritFloatingSceneRenderer::kLightDiffuseColor[] = { 1.0f, 1.0f,
+    1.0f, 1.0f };
+const GLfloat SpiritFloatingSceneRenderer::kLightSpecularColor[] = { 0.1f, 0.1f,
+    0.1f, 1.0f };
 
-const glm::mat4 SpiritFloatingScene::kViewMatrix = glm::lookAt(
+const glm::mat4 SpiritFloatingSceneRenderer::kViewMatrix = glm::lookAt(
     glm::vec3(0.0f, 0.0f, -30.0f), glm::vec3(0.0f),
     glm::vec3(0.0f, 1.0f, 0.0f));
 
-SpiritFloatingScene::SpiritFloatingScene()
-    : initialize_(false),
-      spirits_(),
+SpiritFloatingSceneRenderer::SpiritFloatingSceneRenderer()
+    : initialized_(false),
+      shaders_(),
       shader_program_(0) {
 }
 
-int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
-  if (initialize_) {
+SpiritFloatingSceneRenderer::~SpiritFloatingSceneRenderer() {
+
+}
+
+int SpiritFloatingSceneRenderer::Initialize(const glm::vec2 &window_size) {
+  if (initialized_) {
+    LOGGER.Notice("Already initialized");
     return 1;
   }
-
-  // Initialize spirit object
-  BaseSpirit *spirit = new RandomSpirit(glm::vec3(0.0f, 5.0f, 0.0f),
-                                        X11Color::to_fvec(X11Color::kGray),
-                                        1.0f);
-  if (spirit == nullptr) {
-    LOGGER.Error("Failed to create the random spirit object");
-    return -1;
-  }
-  int ret = spirit->Initialize();
-  if (ret < 0) {
-    LOGGER.Error("Failed to initialize the random spirit object (ret: %d)",
-                 ret);
-    return -1;
-  }
-  spirits_.push_back(spirit);
-  spirit = new CatmullRomSpirit(glm::vec3(0.0f, 5.0f, 0.0f),
-                                X11Color::to_fvec(X11Color::kGreen), 1.0f);
-  if (spirit == nullptr) {
-    LOGGER.Error("Failed to create the catmull row spirit object");
-    return -1;
-  }
-  ret = spirit->Initialize();
-  if (ret < 0) {
-    LOGGER.Error("Failed to initialize the catmull row spirit object (ret: %d)",
-                 ret);
-    return -1;
-  }
-  spirits_.push_back(spirit);
-  spirit = new HermiteSpirit(glm::vec3(0.0f, 5.0f, 0.0f),
-                             X11Color::to_fvec(X11Color::kOrange), 1.0f);
-  if (spirit == nullptr) {
-    LOGGER.Error("Failed to create the hermite spirit object");
-    return -1;
-  }
-  ret = spirit->Initialize();
-  if (ret < 0) {
-    LOGGER.Error("Failed to initialize the hermite spirit object (ret: %d)",
-                 ret);
-    return -1;
-  }
-  spirits_.push_back(spirit);
-
   GLuint shader = glCreateShader(GL_VERTEX_SHADER);
   if (glCompileShaderFile(shader, "share/shader/v_pipeline.glsl") < 0) {
     LOGGER.Error("Failed to compile vertex shader file");
@@ -90,6 +52,7 @@ int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
   shader = glCreateShader(GL_FRAGMENT_SHADER);
   if (glCompileShaderFile(shader, "share/shader/f_pipeline.glsl") < 0) {
     LOGGER.Error("Failed to compile fragment shader file");
+    Finalize();
     return -1;
   }
   shaders_.push_back(shader);
@@ -97,6 +60,7 @@ int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
   shader_program_ = glCreateProgram();
   if (glLinkProgramWithShaders(shader_program_, shaders_) < 0) {
     LOGGER.Error("Failed to link program");
+    Finalize();
     return -1;
   }
   glUseProgram(shader_program_);
@@ -122,18 +86,17 @@ int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
 
-  initialize_ = true;
   return 0;
 }
 
-void SpiritFloatingScene::Finalize() {
-  if (!initialize_) {
-    return;
-  }
-  initialize_ = false;
+void SpiritFloatingSceneRenderer::Finalize() {
+  initialized_ = false;
 
-  glDeleteProgram(shader_program_);
-  shader_program_ = 0;
+  if (shader_program_ != 0) {
+    glDeleteProgram(shader_program_);
+    shader_program_ = 0;
+  }
+
   BOOST_FOREACH(GLuint shader, shaders_) {
     glDeleteShader(shader);
   }
@@ -142,6 +105,91 @@ void SpiritFloatingScene::Finalize() {
   glUseProgram(0);
   glDisable(GL_LIGHTING);
   glDisable(GL_LIGHT0);
+}
+
+void SpiritFloatingSceneRenderer::Begin() {
+  glPushMatrix();
+  glMatrixMode(GL_MODELVIEW);
+  glLoadMatrixf(glm::value_ptr(kViewMatrix));
+}
+
+void SpiritFloatingSceneRenderer::End() {
+  glPopMatrix();
+}
+
+SpiritFloatingScene::SpiritFloatingScene()
+    : initialize_(false),
+      spirits_() {
+}
+
+int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
+  if (initialize_) {
+    return 1;
+  }
+
+  // Initialize spirit object
+  BaseSpirit *spirit = new RandomSpirit(glm::vec3(0.0f, 5.0f, 0.0f),
+                                        X11Color::to_fvec(X11Color::kGray),
+                                        1.0f);
+  if (spirit == nullptr) {
+    LOGGER.Error("Failed to create the random spirit object");
+    return -1;
+  }
+  int ret = spirit->Initialize();
+  if (ret < 0) {
+    LOGGER.Error("Failed to initialize the random spirit object (ret: %d)",
+                 ret);
+    delete spirit;
+    return -1;
+  }
+  spirits_.push_back(spirit);
+  spirit = new CatmullRomSpirit(glm::vec3(0.0f, 5.0f, 0.0f),
+                                X11Color::to_fvec(X11Color::kGreen), 1.0f);
+  if (spirit == nullptr) {
+    LOGGER.Error("Failed to create the catmull row spirit object");
+    Finalize();
+    return -1;
+  }
+  ret = spirit->Initialize();
+  if (ret < 0) {
+    LOGGER.Error("Failed to initialize the catmull row spirit object (ret: %d)",
+                 ret);
+    delete spirit;
+    Finalize();
+    return -1;
+  }
+  spirits_.push_back(spirit);
+  spirit = new HermiteSpirit(glm::vec3(0.0f, 5.0f, 0.0f),
+                             X11Color::to_fvec(X11Color::kOrange), 1.0f);
+  if (spirit == nullptr) {
+    LOGGER.Error("Failed to create the hermite spirit object");
+    Finalize();
+    return -1;
+  }
+  ret = spirit->Initialize();
+  if (ret < 0) {
+    LOGGER.Error("Failed to initialize the hermite spirit object (ret: %d)",
+                 ret);
+    delete spirit;
+    Finalize();
+    return -1;
+  }
+  spirits_.push_back(spirit);
+
+  if (renderer_.Initialize(window_size) < 0) {
+    LOGGER.Error("Failed to initialize the renderer");
+    Finalize();
+    return -1;
+  }
+
+  initialize_ = true;
+  return 0;
+}
+
+void SpiritFloatingScene::Finalize() {
+  initialize_ = false;
+
+  renderer_.Finalize();
 
   BOOST_FOREACH(BaseSpirit *spirit, spirits_) {
     spirit->Finalize();
@@ -171,13 +219,11 @@ void SpiritFloatingScene::Draw(const glm::vec2 &window_size) {
     return;
   }
 
-  glPushMatrix();
-  glMatrixMode(GL_MODELVIEW);
-  glLoadMatrixf(glm::value_ptr(kViewMatrix));
+  renderer_.Begin();
   BOOST_FOREACH(BaseSpirit *spirit, spirits_) {
     spirit->Draw();
   }
-  glPopMatrix();
+  renderer_.End();
 }
 
 int SpiritFloatingScene::OnMouseButtonDown(unsigned char button,
