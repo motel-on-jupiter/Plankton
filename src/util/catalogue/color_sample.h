@@ -1,8 +1,8 @@
 /**
  * Copyright (C) 2014 The Motel on Jupiter
  */
-#ifndef COLORSAMPLE_H_
-#define COLORSAMPLE_H_
+#ifndef COLOR_SAMPLE_H_
+#define COLOR_SAMPLE_H_
 
 // Web colors (http://www.w3.org/TR/REC-html40/types.html#h-6.5)
 namespace WebColor {
@@ -179,4 +179,4 @@ static const unsigned char kYellowGreen[] = { 0x9A, 0xCD, 0x32 };
 extern glm::vec3 to_fvec(const unsigned char (&color)[3]);
 }
 
-#endif /* COLORSAMPLE_H_ */
+#endif /* COLOR_SAMPLE_H_ */

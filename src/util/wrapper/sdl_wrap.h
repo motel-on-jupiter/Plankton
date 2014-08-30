@@ -1,8 +1,8 @@
 /**
  * Copyright (C) 2014 The Motel on Jupiter
  */
-#ifndef SDLWRAP_H_
-#define SDLWRAP_H_
+#ifndef SDL_WRAP_H_
+#define SDL_WRAP_H_
 
 #include "util/wrapper/glgraphics_wrap.h"
 
@@ -16,4 +16,4 @@
 extern int RenderTTFText(TTF_Font *Font, const SDL_Color& Color,
                          const glm::vec2 &Position, const char *Text);
 
-#endif /* SDLWRAP_H_ */
+#endif /* SDL_WRAP_H_ */
