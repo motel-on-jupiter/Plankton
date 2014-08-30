@@ -17,7 +17,7 @@ class PlanktonGameSceneRendererInterface {
   virtual int Initialize(const glm::vec2 &window_size) = 0;
   virtual void Finalize() = 0;
 
-  virtual void Begin() = 0;
+  virtual void Begin(const glm::vec2 &window_size) = 0;
   virtual void End() = 0;
 };
 

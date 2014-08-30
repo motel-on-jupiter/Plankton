@@ -17,7 +17,7 @@ class SpiritFloatingSceneRenderer : public PlanktonGameSceneRendererInterface {
   virtual int Initialize(const glm::vec2 &window_size);
   virtual void Finalize();
 
-  virtual void Begin();
+  virtual void Begin(const glm::vec2 &window_size);
   virtual void End();
 
  private:
@@ -29,10 +29,15 @@ class SpiritFloatingSceneRenderer : public PlanktonGameSceneRendererInterface {
   static const GLfloat kLightDiffuseColor[];
   static const GLfloat kLightSpecularColor[];
   static const glm::mat4 kViewMatrix;
+  static const char *kShaderPaths[];
 
   bool initialized_;
   std::vector<Shader *> shaders_;
-  ShaderProgram shader_program_;
+  std::vector<ShaderProgram *> shaderps_;
+  GLuint framebuf_;
+  GLuint renderbuf_;
+  GLuint colortex_;
+  GLuint depthtex_;
 };
 
 class SpiritFloatingScene : public PlanktonGameSceneInterface {

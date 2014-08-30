@@ -28,10 +28,18 @@ const glm::mat4 SpiritFloatingSceneRenderer::kViewMatrix = glm::lookAt(
     glm::vec3(0.0f, 0.0f, -30.0f), glm::vec3(0.0f),
     glm::vec3(0.0f, 1.0f, 0.0f));
 
+const char *SpiritFloatingSceneRenderer::kShaderPaths[] = {
+    "share/shader/v_pipeline.glsl", "share/shader/f_pipeline.glsl",
+    "share/shader/v_filter.glsl", "share/shader/f_none_filter.glsl", };
+
 SpiritFloatingSceneRenderer::SpiritFloatingSceneRenderer()
     : initialized_(false),
       shaders_(),
-      shader_program_() {
+      shaderps_(),
+      framebuf_(0),
+      renderbuf_(0),
+      colortex_(0),
+      depthtex_(0) {
 }
 
 SpiritFloatingSceneRenderer::~SpiritFloatingSceneRenderer() {
@@ -44,43 +52,101 @@ int SpiritFloatingSceneRenderer::Initialize(const glm::vec2 &window_size) {
     return 1;
   }
 
-  Shader *vshader = new Shader(GL_VERTEX_SHADER,
-                               "share/shader/v_pipeline.glsl");
-  if (vshader == nullptr) {
-    LOGGER.Error("Failed to create vertex shader object");
-    return -1;
-  }
-  if (vshader->Compile() < 0) {
-    LOGGER.Error("Failed to compile vertex shader");
-    delete vshader;
-    return -1;
-  }
-  shaders_.push_back(vshader);
+  glGenFramebuffers(1, &framebuf_);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuf_);
 
-  Shader *fshader = new Shader(GL_FRAGMENT_SHADER,
-                               "share/shader/f_pipeline.glsl");
-  if (fshader == nullptr) {
-    LOGGER.Error("Failed to create fragment shader object");
-    return -1;
-  }
-  if (fshader->Compile() < 0) {
-    LOGGER.Error("Failed to compile fragment shader");
-    delete fshader;
-    Finalize();
-    return -1;
-  }
-  shaders_.push_back(fshader);
+  glGenRenderbuffers(1, &renderbuf_);
+  glBindRenderbuffer(GL_RENDERBUFFER, renderbuf_);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24,
+                        static_cast<GLsizei>(window_size.x),
+                        static_cast<GLsizei>(window_size.y));
+  glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT,
+                            GL_RENDERBUFFER, renderbuf_);
 
-  shader_program_.PushShader(*vshader);
-  shader_program_.PushShader(*fshader);
-  if (shader_program_.Link() < 0) {
-    LOGGER.Error("Failed to link program");
-    Finalize();
-    return -1;
+  glGenTextures(1, &colortex_);
+  glBindTexture(GL_TEXTURE_2D, colortex_);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, static_cast<GLsizei>(window_size.x),
+               static_cast<GLsizei>(window_size.y), 0, GL_RGBA,
+               GL_UNSIGNED_BYTE, nullptr);
+  glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, colortex_, 0);
+  GLenum attachments[] = { GL_COLOR_ATTACHMENT0 };
+  glDrawBuffers(1, attachments);
+
+  glGenTextures(1, &depthtex_);
+  glBindTexture(GL_TEXTURE_2D, depthtex_);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT,
+               static_cast<GLsizei>(window_size.x),
+               static_cast<GLsizei>(window_size.y), 0, GL_DEPTH_COMPONENT,
+               GL_FLOAT, nullptr);
+  glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, depthtex_, 0);
+
+  if (glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+    LOGGER.Error("Failed to complete frame buffer");
   }
 
-  glUseProgram(shader_program_.name());
+  glBindTexture(GL_TEXTURE_2D, colortex_);
+  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
+  for (int i = 0; i < ARRAYSIZE(kShaderPaths) / 2; ++i) {
+    Shader *vshader = new Shader(GL_VERTEX_SHADER, kShaderPaths[i * 2]);
+    if (vshader == nullptr) {
+      LOGGER.Error("Failed to create vertex shader object");
+      return -1;
+    }
+    if (vshader->Compile() < 0) {
+      LOGGER.Error("Failed to compile vertex shader");
+      delete vshader;
+      return -1;
+    }
+    shaders_.push_back(vshader);
+
+    Shader *fshader = new Shader(GL_FRAGMENT_SHADER, kShaderPaths[i * 2 + 1]);
+    if (fshader == nullptr) {
+      LOGGER.Error("Failed to create fragment shader object");
+      return -1;
+    }
+    if (fshader->Compile() < 0) {
+      LOGGER.Error("Failed to compile fragment shader");
+      delete fshader;
+      Finalize();
+      return -1;
+    }
+    shaders_.push_back(fshader);
+
+    ShaderProgram *program = new ShaderProgram();
+    if (program == nullptr) {
+      LOGGER.Error("Failed to create shader program object");
+      return -1;
+    }
+    program->PushShader(*vshader);
+    program->PushShader(*fshader);
+    if (program->Link() < 0) {
+      LOGGER.Error("Failed to link program");
+      delete program;
+      Finalize();
+      return -1;
+    }
+    shaderps_.push_back(program);
+  }
+  return 0;
+}
+
+void SpiritFloatingSceneRenderer::Finalize() {
+  initialized_ = false;
+
+  for (auto it = shaderps_.begin(); it != shaderps_.end(); ++it) {
+    delete *it;
+  }
+  shaderps_.clear();
+  for (auto it = shaders_.begin(); it != shaders_.end(); ++it) {
+    delete *it;
+  }
+  shaders_.clear();
+}
+
+void SpiritFloatingSceneRenderer::Begin(const glm::vec2 &window_size) {
   // Set up view-port
   glViewport(0, 0, static_cast<GLsizei>(window_size.x),
              static_cast<GLsizei>(window_size.y));
@@ -88,7 +154,6 @@ int SpiritFloatingSceneRenderer::Initialize(const glm::vec2 &window_size) {
 
   // Set up projection matrix
   glMatrixMode(GL_PROJECTION);
-  glLoadIdentity();
   glLoadMatrixf(
       glm::value_ptr(
           glm::perspective(kPerspectiveFovy, window_size.x / window_size.y,
@@ -102,24 +167,12 @@ int SpiritFloatingSceneRenderer::Initialize(const glm::vec2 &window_size) {
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
 
-  return 0;
-}
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuf_);
+  glUseProgram(shaderps_[0]->name());
 
-void SpiritFloatingSceneRenderer::Finalize() {
-  initialized_ = false;
+  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-  shader_program_.Clean();
-  for (auto it = shaders_.begin(); it != shaders_.end(); ++it) {
-    delete *it;
-  }
-  shaders_.clear();
-
-  glUseProgram(0);
-  glDisable(GL_LIGHTING);
-  glDisable(GL_LIGHT0);
-}
-
-void SpiritFloatingSceneRenderer::Begin() {
   glPushMatrix();
   glMatrixMode(GL_MODELVIEW);
   glLoadMatrixf(glm::value_ptr(kViewMatrix));
@@ -127,11 +180,36 @@ void SpiritFloatingSceneRenderer::Begin() {
 
 void SpiritFloatingSceneRenderer::End() {
   glPopMatrix();
+
+  glDisable(GL_LIGHTING);
+  glDisable(GL_LIGHT0);
+
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+  glUseProgram(shaderps_[1]->name());
+
+  glEnable(GL_TEXTURE_2D);
+  glBindTexture(GL_TEXTURE_2D, colortex_);
+
+  static const GLfloat quad_vertices[4][3] = { { -1.0f, -1.0f, 0.0f }, { -1.0f,
+      1.0f, 0.0f }, { 1.0f, 1.0f, 0.0f }, { 1.0f, -1.0f, 0.0f }, };
+  static const GLfloat tex_coords[4][3] = { { 0.0f, 0.0f }, { 0.0f, 1.0f }, {
+      1.0f, 1.0f }, { 1.0f, 0.0f }, };
+
+  glBegin(GL_QUADS);
+  for (int i = 0; i < 4; ++i) {
+    glTexCoord2fv(tex_coords[i]);
+    glVertex3fv(quad_vertices[i]);
+  }
+  glEnd();
+
+  glUseProgram(0);
+  glDisable(GL_TEXTURE_2D);
 }
 
 SpiritFloatingScene::SpiritFloatingScene()
     : initialize_(false),
-      spirits_() {
+      spirits_(),
+      renderer_() {
 }
 
 int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
@@ -225,13 +303,11 @@ void SpiritFloatingScene::Update(float elapsed_time,
 }
 
 void SpiritFloatingScene::Draw(const glm::vec2 &window_size) {
-  UNUSED(window_size);
-
   if (!initialize_) {
     return;
   }
 
-  renderer_.Begin();
+  renderer_.Begin(window_size);
   BOOST_FOREACH(BaseSpirit *spirit, spirits_) {
     spirit->Draw();
   }
