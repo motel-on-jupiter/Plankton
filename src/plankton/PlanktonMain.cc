@@ -79,6 +79,15 @@ int PlanktonMain(int argc, char *argv[], const char *config_path) {
     return -1;
   }
 
+  // Initialize the graphics extension library
+  GLenum glew_error = glewInit();
+  if (glew_error != GLEW_OK) {
+    LOGGER.Error("Failed to initialize glew library (errmsg: %s)",
+                 glewGetErrorString(glew_error));
+    PlanktonCleanUp();
+    return -1;
+  }
+
   // Initialize the tweaker library
   if (TwInit(TW_OPENGL, NULL) == 0) {
     LOGGER.Error("Failed to initialize the tweaker library (errmsg: %s)",
