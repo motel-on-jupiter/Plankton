@@ -30,6 +30,7 @@ const glm::mat4 SpiritFloatingSceneRenderer::kViewMatrix = glm::lookAt(
 
 const char *SpiritFloatingSceneRenderer::kShaderPaths[] = {
     "share/shader/v_pipeline.glsl", "share/shader/f_pipeline.glsl",
+    "share/shader/v_blend.glsl", "share/shader/f_blend.glsl",
     "share/shader/v_filter.glsl", "share/shader/f_none_filter.glsl", };
 
 SpiritFloatingSceneRenderer::SpiritFloatingSceneRenderer()
@@ -49,14 +50,17 @@ int SpiritFloatingSceneRenderer::Initialize(const glm::vec2 &window_size) {
     return 1;
   }
 
-  if (framebuf_.SetUp(window_size) < 0) {
+  if (framebuf_.SetUp(window_size, 2) < 0) {
     LOGGER.Error("Faield to set up the frame buffer");
     return -1;
   }
-  glBindTexture(GL_TEXTURE_2D, framebuf_.colortex());
-  glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  for (auto it = framebuf_.colortexs().begin();
+      it != framebuf_.colortexs().end(); ++it) {
+    glBindTexture(GL_TEXTURE_2D, *it);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  }
 
   for (int i = 0; i < ARRAYSIZE(kShaderPaths) / 2; ++i) {
     GLShader *vshader = new GLShader(GL_VERTEX_SHADER, kShaderPaths[i * 2]);
@@ -140,7 +144,9 @@ void SpiritFloatingSceneRenderer::Begin(const glm::vec2 &window_size) {
   glEnable(GL_LIGHT0);
 
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuf_.name());
-  glUseProgram(shaderps_[0]->name());
+  GLenum attachments[] = {GL_COLOR_ATTACHMENT0};
+  glDrawBuffers(1, attachments);
+  glUseProgram(shaderps_.at(0)->name());
 
   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -156,16 +162,36 @@ void SpiritFloatingSceneRenderer::End() {
   glDisable(GL_LIGHTING);
   glDisable(GL_LIGHT0);
 
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-  glUseProgram(shaderps_[1]->name());
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuf_.name());
+  GLenum attachment1[] = { GL_COLOR_ATTACHMENT1 };
+  glDrawBuffers(1, attachment1);
 
+  glUseProgram(shaderps_.at(1)->name());
+  glUniform1i(glGetUniformLocation(shaderps_.at(1)->name(), "texture0"), 0);
+  glUniform1i(glGetUniformLocation(shaderps_.at(1)->name(), "texture1"), 1);
+  glUniform1f(glGetUniformLocation(shaderps_.at(1)->name(), "blend0"), 0.3f);
+  glUniform1f(glGetUniformLocation(shaderps_.at(1)->name(), "blend1"), 0.8f);
   glEnable(GL_TEXTURE_2D);
-  glBindTexture(GL_TEXTURE_2D, framebuf_.colortex());
+  glActiveTexture(GL_TEXTURE0);
+  glBindTexture(GL_TEXTURE_2D, framebuf_.colortexs().at(0));
+  glActiveTexture(GL_TEXTURE1);
+  glBindTexture(GL_TEXTURE_2D, framebuf_.colortexs().at(1));
+  glActiveTexture(GL_TEXTURE0);
 
   static const GLfloat quad_vertices[4][3] = { { -1.0f, -1.0f, 0.0f }, { -1.0f,
       1.0f, 0.0f }, { 1.0f, 1.0f, 0.0f }, { 1.0f, -1.0f, 0.0f }, };
   static const GLfloat tex_coords[4][3] = { { 0.0f, 0.0f }, { 0.0f, 1.0f }, {
       1.0f, 1.0f }, { 1.0f, 0.0f }, };
+  glBegin(GL_QUADS);
+  for (int i = 0; i < 4; ++i) {
+    glTexCoord2fv(tex_coords[i]);
+    glVertex3fv(quad_vertices[i]);
+  }
+  glEnd();
+
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+  glUseProgram(shaderps_.at(2)->name());
+  glBindTexture(GL_TEXTURE_2D, framebuf_.colortexs().at(1));
 
   glBegin(GL_QUADS);
   for (int i = 0; i < 4; ++i) {
