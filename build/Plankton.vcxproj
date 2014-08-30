@@ -18,6 +18,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\src\plankton\actor\Spirit.cc" />
     <ClCompile Include="..\src\plankton\PlanktonGame.cc" />
     <ClCompile Include="..\src\plankton\PlanktonMain.cc" />
     <ClCompile Include="..\src\plankton\PlanktonTweakerContext.cc" />
@@ -56,6 +57,7 @@
     <ClInclude Include="..\src\entity\BaseEntity.h" />
     <ClInclude Include="..\src\entity\EntityDraw.h" />
     <ClInclude Include="..\src\pch\precompile.h" />
+    <ClInclude Include="..\src\plankton\actor\Spirit.h" />
     <ClInclude Include="..\src\plankton\PlanktonGame.h" />
     <ClInclude Include="..\src\plankton\PlanktonMain.h" />
     <ClInclude Include="..\src\plankton\PlanktonTweakerContext.h" />

@@ -40,6 +40,9 @@
     <Filter Include="src\util\catalogue">
       <UniqueIdentifier>{4a7ea003-d04b-4a16-ac2f-f66a4a0eb8a7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\plankton\actor">
+      <UniqueIdentifier>{1e961ba6-6449-4d30-8b5b-27ec8334f7cc}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\util\logging\emitter\DebuggerConsoleLogEmitter.cc">
@@ -134,6 +137,9 @@
     </ClCompile>
     <ClCompile Include="..\src\util\wrapper\glgraphics_wrap.cc">
       <Filter>src\util\wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\plankton\actor\Spirit.cc">
+      <Filter>src\plankton\actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -244,6 +250,9 @@
     </ClInclude>
     <ClInclude Include="..\src\util\assert_util.h">
       <Filter>src\util</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\plankton\actor\Spirit.h">
+      <Filter>src\plankton\actor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
