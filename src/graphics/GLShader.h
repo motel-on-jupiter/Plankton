@@ -36,6 +36,14 @@ class GLShaderProgram {
   int Link();
   void Clean();
 
+  GLuint GetUniformLocation(const GLchar *uniform) const;
+  void SetUniform1f(const GLchar *uniform, GLfloat v0) const;
+  void SetUniform2f(const GLchar *uniform, GLfloat v0, GLfloat v1) const;
+  void SetUniform3f(const GLchar *uniform, GLfloat v0, GLfloat v1, GLfloat v2) const;
+  void SetUniform4f(const GLchar *uniform, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3) const;
+  void SetUniform1i(const GLchar *uniform, GLint v0) const;
+  void SetUniform2i(const GLchar *uniform, GLint v0, GLint v1) const;
+
   GLuint name() const {
     return name_;
   }

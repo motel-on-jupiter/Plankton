@@ -70,3 +70,31 @@ void GLShaderProgram::Clean() {
   shaders_.clear();
 }
 
+GLuint GLShaderProgram::GetUniformLocation(const GLchar *uniform) const {
+  return glGetUniformLocation(name_, uniform);
+}
+
+void GLShaderProgram::SetUniform1f(const GLchar *uniform, GLfloat v0) const {
+  glUniform1f(GetUniformLocation(uniform), v0);
+}
+
+void GLShaderProgram::SetUniform2f(const GLchar *uniform, GLfloat v0, GLfloat v1) const {
+  glUniform2f(GetUniformLocation(uniform), v0, v1);
+}
+
+void GLShaderProgram::SetUniform3f(const GLchar *uniform, GLfloat v0, GLfloat v1, GLfloat v2) const {
+  glUniform3f(GetUniformLocation(uniform), v0, v1, v2);
+}
+
+void GLShaderProgram::SetUniform4f(const GLchar *uniform, GLfloat v0, GLfloat v1, GLfloat v2, GLfloat v3) const {
+  glUniform4f(GetUniformLocation(uniform), v0, v1, v2, v3);
+}
+
+void GLShaderProgram::SetUniform1i(const GLchar *uniform, GLint v0) const {
+  glUniform1i(GetUniformLocation(uniform), v0);
+}
+
+void GLShaderProgram::SetUniform2i(const GLchar *uniform, GLint v0, GLint v1) const {
+  glUniform2i(GetUniformLocation(uniform), v0, v1);
+}
+

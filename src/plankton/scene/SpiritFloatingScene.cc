@@ -103,6 +103,9 @@ int SpiritFloatingSceneRenderer::Initialize(const glm::vec2 &window_size) {
     }
     shaderps_.push_back(program);
   }
+
+  glSetClearingColor(0.0f, 0.0f, 0.0f, 0.0f);
+
   initialized_ = true;
   return 0;
 }
@@ -143,13 +146,11 @@ void SpiritFloatingSceneRenderer::Begin(const glm::vec2 &window_size) {
   glEnable(GL_LIGHTING);
   glEnable(GL_LIGHT0);
 
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuf_.name());
-  GLenum attachments[] = {GL_COLOR_ATTACHMENT0};
-  glDrawBuffers(1, attachments);
+  glBindDrawFramebuffer(framebuf_.name());
+  glFramebufferDrawColorAttachment(0);
   glUseProgram(shaderps_.at(0)->name());
 
-  glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glClearAll();
 
   glPushMatrix();
   glMatrixMode(GL_MODELVIEW);
@@ -158,25 +159,23 @@ void SpiritFloatingSceneRenderer::Begin(const glm::vec2 &window_size) {
 
 void SpiritFloatingSceneRenderer::End() {
   glPopMatrix();
-
   glDisable(GL_LIGHTING);
   glDisable(GL_LIGHT0);
 
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuf_.name());
-  GLenum attachment1[] = { GL_COLOR_ATTACHMENT1 };
-  glDrawBuffers(1, attachment1);
+  glBindDrawFramebuffer(framebuf_.name());
+  glFramebufferDrawColorAttachment(1);
 
   glUseProgram(shaderps_.at(1)->name());
-  glUniform1i(glGetUniformLocation(shaderps_.at(1)->name(), "texture0"), 0);
-  glUniform1i(glGetUniformLocation(shaderps_.at(1)->name(), "texture1"), 1);
-  glUniform1f(glGetUniformLocation(shaderps_.at(1)->name(), "blend0"), 0.3f);
-  glUniform1f(glGetUniformLocation(shaderps_.at(1)->name(), "blend1"), 0.8f);
   glEnable(GL_TEXTURE_2D);
-  glActiveTexture(GL_TEXTURE0);
-  glBindTexture(GL_TEXTURE_2D, framebuf_.colortexs().at(0));
-  glActiveTexture(GL_TEXTURE1);
-  glBindTexture(GL_TEXTURE_2D, framebuf_.colortexs().at(1));
-  glActiveTexture(GL_TEXTURE0);
+  glActiveTextureUnit(0);
+  glBindTexture2D(framebuf_.colortexs().at(0));
+  glActiveTextureUnit(1);
+  glBindTexture2D(framebuf_.colortexs().at(1));
+  shaderps_.at(1)->SetUniform1i("texture0", 0);
+  shaderps_.at(1)->SetUniform1i("texture1", 1);
+  shaderps_.at(1)->SetUniform1f("blend0", 0.3f);
+  shaderps_.at(1)->SetUniform1f("blend1", 0.8f);
+  glActiveTextureUnit(0);
 
   static const GLfloat quad_vertices[4][3] = { { -1.0f, -1.0f, 0.0f }, { -1.0f,
       1.0f, 0.0f }, { 1.0f, 1.0f, 0.0f }, { 1.0f, -1.0f, 0.0f }, };
@@ -189,9 +188,9 @@ void SpiritFloatingSceneRenderer::End() {
   }
   glEnd();
 
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+  glUnbindDrawFramebuffer();
   glUseProgram(shaderps_.at(2)->name());
-  glBindTexture(GL_TEXTURE_2D, framebuf_.colortexs().at(1));
+  glBindTexture2D(framebuf_.colortexs().at(1));
 
   glBegin(GL_QUADS);
   for (int i = 0; i < 4; ++i) {
