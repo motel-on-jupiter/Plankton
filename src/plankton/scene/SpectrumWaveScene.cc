@@ -2,7 +2,6 @@
  * Copyright (C) 2014 The Motel On Jupiter
  */
 #include "SpectrumWaveScene.h"
-#include <boost/foreach.hpp>
 #include "util/catalogue/color_sample.h"
 #include "util/logging/Logger.h"
 #include "util/wrapper/glgraphics_wrap.h"
@@ -67,12 +66,12 @@ void SpectrumWaveScene::Draw(const glm::vec2 &window_size) {
 
   glMatrixMode(GL_MODELVIEW);
   float x = 0.0f;
-  BOOST_FOREACH(auto bar_length, bar_lengths_) {
+  for (auto it = bar_lengths_.begin(); it != bar_lengths_.end(); ++it) {
     glBegin(GL_LINE_LOOP);
     glVertex2f(x, window_size.y);
     glVertex2f(x + bar_width, window_size.y);
-    glVertex2f(x + bar_width, window_size.y - bar_length);
-    glVertex2f(x, window_size.y - bar_length);
+    glVertex2f(x + bar_width, window_size.y - *it);
+    glVertex2f(x, window_size.y - *it);
     glEnd();
     x += bar_width;
   }

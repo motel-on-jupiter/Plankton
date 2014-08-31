@@ -3,7 +3,6 @@
  */
 #include "SpiritFloatingScene.h"
 #include <algorithm>
-#include <boost/foreach.hpp>
 #include "plankton/actor/Spirit.h"
 #include "util/catalogue/color_sample.h"
 #include "util/logging/Logger.h"
@@ -75,7 +74,8 @@ int SpiritFloatingSceneRenderer::Initialize(const glm::vec2 &window_size) {
     }
     shaders_.push_back(vshader);
 
-    GLShader *fshader = new GLShader(GL_FRAGMENT_SHADER, kShaderPaths[i * 2 + 1]);
+    GLShader *fshader = new GLShader(GL_FRAGMENT_SHADER,
+                                     kShaderPaths[i * 2 + 1]);
     if (fshader == nullptr) {
       LOGGER.Error("Failed to create fragment shader object");
       return -1;
@@ -278,9 +278,9 @@ void SpiritFloatingScene::Finalize() {
 
   renderer_.Finalize();
 
-  BOOST_FOREACH(BaseSpirit *spirit, spirits_) {
-    spirit->Finalize();
-    delete spirit;
+  for (auto it = spirits_.begin(); it != spirits_.end(); ++it) {
+    (*it)->Finalize();
+    delete *it;
   }
   spirits_.clear();
 }
@@ -293,8 +293,8 @@ void SpiritFloatingScene::Update(float elapsed_time,
     return;
   }
 
-  BOOST_FOREACH(BaseSpirit *spirit, spirits_) {
-    spirit->Update(elapsed_time);
+  for (auto it = spirits_.begin(); it != spirits_.end(); ++it) {
+    (*it)->Update(elapsed_time);
   }
   return;
 }
@@ -305,8 +305,8 @@ void SpiritFloatingScene::Draw(const glm::vec2 &window_size) {
   }
 
   renderer_.Begin(window_size);
-  BOOST_FOREACH(BaseSpirit *spirit, spirits_) {
-    spirit->Draw();
+  for (auto it = spirits_.begin(); it != spirits_.end(); ++it) {
+    (*it)->Draw();
   }
   renderer_.End();
 }

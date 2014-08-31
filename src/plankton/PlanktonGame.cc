@@ -3,7 +3,6 @@
  */
 #include "PlanktonGame.h"
 
-#include <boost/foreach.hpp>
 #include <GL/glew.h>
 #include <SDL_surface.h>
 #include <SDL_ttf.h>
@@ -52,8 +51,8 @@ void PlanktonGame::Finalize() {
     active_scene_->Finalize();
     active_scene_ = nullptr;
   }
-  BOOST_FOREACH(PlanktonGameSceneInterface *scene, scenes_) {
-    delete scene;
+  for (auto it = scenes_.begin(); it != scenes_.end(); ++it) {
+    delete *it;
   }
   scenes_.clear();
   if (font_ != nullptr) {
