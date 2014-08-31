@@ -16,13 +16,13 @@ int glCompileShaderFile(GLuint shader, const char *path) {
   }
   if (fseek(fp, 0L, SEEK_END) != 0) {
     char errbuf[256];
-    ASSERT(strerror_s(errbuf, ARRAYSIZE(errbuf), errno) == 0);
+    assert_equal(strerror_s(errbuf, ARRAYSIZE(errbuf), errno), 0);
     LOGGER.Error("Failed to seek the end of file (errmsg: %s)", errbuf);
   }
   long filesize = ftell(fp);
   if (fseek(fp, 0L, SEEK_SET) != 0) {
     char errbuf[256];
-    ASSERT(strerror_s(errbuf, ARRAYSIZE(errbuf), errno) == 0);
+    assert_equal(strerror_s(errbuf, ARRAYSIZE(errbuf), errno), 0);
     LOGGER.Error("Failed to seek the start of file (errmsg: %s)", errbuf);
   }
   GLchar *source = new char[filesize / sizeof(char) + 1];
@@ -82,4 +82,120 @@ int glLinkProgramWithShaders(GLuint program, std::vector<GLuint> &shaders) {
     return -1;
   }
   return 0;
+}
+
+inline void glActiveTextureUnit(GLuint unit) {
+  glActiveTexture(GL_TEXTURE0 + unit);
+}
+
+inline void glBindDrawFramebuffer(GLuint framebuffer) {
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, framebuffer);
+}
+
+inline void glBindReadFramebuffer(GLuint framebuffer) {
+  glBindFramebuffer(GL_READ_FRAMEBUFFER, framebuffer);
+}
+
+inline void glBindRenderbuffer_(GLuint renderbuffer) {
+  glBindRenderbuffer(GL_RENDERBUFFER, renderbuffer);
+}
+
+inline void glBindTexture1D(GLuint texture) {
+  glBindTexture(GL_TEXTURE_1D, texture);
+}
+
+inline void glBindTexture2D(GLuint texture) {
+  glBindTexture(GL_TEXTURE_2D, texture);
+}
+
+inline void glBindTexture3D(GLuint texture) {
+  glBindTexture(GL_TEXTURE_3D, texture);
+}
+
+inline GLenum glCheckDrawFramebufferStatus() {
+  return glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
+}
+
+inline GLenum glCheckReadFramebufferStatus() {
+  return glCheckFramebufferStatus(GL_READ_FRAMEBUFFER);
+}
+
+inline void glClearAll() {
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+}
+
+inline void glDrawFramebufferColorTexture(GLint attachidx, GLuint texture,
+                                          GLint level) {
+  glFramebufferTexture(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachidx, texture, level);
+}
+
+inline void glDrawFramebufferDepthTexture(GLuint texture, GLint level) {
+  glFramebufferDepthTexture(GL_DRAW_FRAMEBUFFER, texture, level);
+}
+
+inline void glDrawFramebufferRenderbuffer(GLenum attachment,
+                                          GLuint renderbuffer) {
+  glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, attachment, GL_RENDERBUFFER,
+                            renderbuffer);
+}
+
+inline void glFramebufferColorTexture(GLenum target, GLint attachidx,
+                                      GLuint texture, GLint level) {
+  ASSERT(attachidx < GL_MAX_COLOR_ATTACHMENTS);
+  glFramebufferTexture(target, GL_COLOR_ATTACHMENT0 + attachidx, texture,
+                       level);
+}
+
+inline void glFramebufferDepthTexture(GLenum target, GLuint texture,
+                                      GLint level) {
+  glFramebufferTexture(target, GL_DEPTH_ATTACHMENT, texture, level);
+}
+
+inline void glFramebufferDrawColorAttachment(GLint attachidx) {
+  ASSERT(attachidx < GL_MAX_COLOR_ATTACHMENTS);
+  glDrawBuffer(GL_COLOR_ATTACHMENT0 + attachidx);
+}
+
+inline void glGenFramebuffer(GLuint *id) {
+  glGenFramebuffers(1, id);
+}
+
+inline void glGenRenderbuffer(GLuint *renderbuffer) {
+  glGenRenderbuffers(1, renderbuffer);
+}
+
+inline void glGenTexture(GLuint *texture) {
+  glGenTextures(1, texture);
+}
+
+inline void glReadFramebufferColorTexture(GLint attachidx, GLuint texture,
+                                          GLint level) {
+  glFramebufferTexture(GL_READ_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + attachidx, texture, level);
+}
+
+inline void glReadFramebufferDepthTexture(GLuint texture, GLint level) {
+  glFramebufferDepthTexture(GL_READ_FRAMEBUFFER, texture, level);
+}
+
+inline void glReadFramebufferRenderbuffer(GLenum attachment,
+                                          GLuint renderbuffer) {
+  glFramebufferRenderbuffer(GL_READ_FRAMEBUFFER, attachment, GL_RENDERBUFFER,
+                            renderbuffer);
+}
+
+inline void glUnbindDrawFramebuffer() {
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+}
+
+inline void glUnbindFramebuffer(GLenum target) {
+  glBindFramebuffer(target, 0);
+}
+
+inline void glUnbindReadFramebuffer() {
+  glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+}
+
+inline void glSetClearingColor(GLclampf red, GLclampf green, GLclampf blue,
+                               GLclampf alpha) {
+  glClearColor(red, green, blue, alpha);
 }
