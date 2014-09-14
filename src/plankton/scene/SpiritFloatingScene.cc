@@ -40,7 +40,6 @@ SpiritFloatingSceneRenderer::SpiritFloatingSceneRenderer()
 }
 
 SpiritFloatingSceneRenderer::~SpiritFloatingSceneRenderer() {
-
 }
 
 int SpiritFloatingSceneRenderer::Initialize(const glm::vec2 &window_size) {
@@ -215,7 +214,7 @@ int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
   }
 
   // Initialize spirit object
-  BaseSpirit *spirit = new RandomSpirit(glm::vec3(0.0f, 5.0f, 0.0f),
+  BaseSpirit *spirit = new CatmullRomSpirit(glm::vec3(0.0f, 5.0f, 0.0f),
                                         X11Color::to_fvec(X11Color::kGray),
                                         1.0f);
   if (spirit == nullptr) {
@@ -246,7 +245,7 @@ int SpiritFloatingScene::Initialize(const glm::vec2 &window_size) {
     return -1;
   }
   spirits_.push_back(spirit);
-  spirit = new HermiteSpirit(glm::vec3(0.0f, 5.0f, 0.0f),
+  spirit = new CatmullRomSpirit(glm::vec3(0.0f, 5.0f, 0.0f),
                              X11Color::to_fvec(X11Color::kOrange), 1.0f);
   if (spirit == nullptr) {
     LOGGER.Error("Failed to create the hermite spirit object");
